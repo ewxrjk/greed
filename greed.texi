@@ -1,0 +1,1143 @@
+\input texinfo   @c -*-texinfo-*-
+@comment %**start of header (This is for running Texinfo on a region.)
+@setfilename greed.info
+@settitle Greed
+@comment %**end of header (This is for running Texinfo on a region.)
+@ifinfo
+This file documents Greed, a Groggs Reader/Editor for GNU Emacs and XEmacs
+
+Copyright @copyright{} 1995-6 Gareth Rees, 2000 Owen Dunn
+@end ifinfo
+@tex
+\parindent=0pt
+@end tex
+@titlepage
+@sp 10
+@center @titlefont{Greed}
+@sp 2
+@center A Groggs Reader/Editor for GNU Emacs and XEmacs
+@sp 2
+@center Gareth Rees, November 1995 -- March 1996
+@center Owen Dunn, 2000
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1995 Gareth Rees, 2000 Owen Dunn
+@end titlepage
+@c ---------------------------------------------------------------------
+@node    Top,       Introduction, (dir),    (dir)
+@comment node-name, next,         previous, up
+
+@menu
+* Copying::             Licence for copying and distribution
+
+* Introduction::        What is Greed?  What is Groggs?
+* Installation::        Compiling and installing Greed
+* Getting started::     Logging in to a server
+* Reading::             Reading Groggs items
+* Replying::            Replying to Groggs and starting new items
+* Editing::             Editing Groggs items
+* Customisation::       Making Greed do what you want
+
+* Concept index::       Index of terms and concepts
+* Variables index::     Index of customisable variables
+@end menu
+@c
+@c ---------------------------------------------------------------------
+@node Copying, Introduction, Top, Top
+@chapter Copyright and licence
+
+Greed is copyright @copyright{} 1995--6 by Gareth Rees, 2000 by Owen Dunn
+
+Greed is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+     
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+@c
+@c ---------------------------------------------------------------------
+@node Introduction, Installation, Copying, Top
+@chapter Introduction
+
+@dfn{GROGGS} stands for @dfn{General-purpose Reverse Ordered Gossip
+Gathering System} and was originally a bulletin board on the IBM 3074
+mainframe @dfn{Phoenix} belonging to the University of Cambridge, UK.
+When Phoenix was closed down at the end of August 1995, Groggs was
+redesigned so as to run over the Internet using the newly-designed
+network protocol @dfn{RGTP} (@dfn{Reverse Gossip Transfer Protocol}).
+@cindex Groggs, defined
+@cindex RGTP, defined
+@cindex Gossip
+@cindex Cambridge University
+@cindex Phoenix mainframe
+
+The discussion in a Groggs is organised into @dfn{Items}, an item being
+a debate or chat on a particular subject.  Typically, a group of people
+(the @dfn{Groggs editors}) run a Groggs server on a computer connected
+to the Internet; people wanting to read and reply to items run client
+programs on their own computers to fetch the items and send the text of
+their replies.
+@cindex Items
+@cindex Groggs server
+@cindex Groggs client
+@cindex Groggs editors
+@cindex Editors
+
+Groggs differs from Usenet in at least these ways:
+
+@itemize @bullet
+@item
+It is synchronous: that is, replies are added to the end of items in the
+order that they appear at the server, and it is likely that someone
+posting a reply has read all the previous text in the item.  This
+encourages less repetition of content than Usenet, and avoids the
+confusion that arises from replies appearing at a site before the
+article they were in respose to.
+@cindex Replies
+@cindex Usenet, comparison to Groggs
+@cindex Synchronous
+
+@item
+It supports authentication: that is, if the editors running the server
+are honest, then you can have some confidence that a reply purporting to
+come from `spong@@foo.co.uk' really does come from the person with that
+email address.
+@cindex Authentication
+
+@item
+Unlike Usenet threads, Groggs items are restricted in size.  When an
+item gets too big, the next person to reply to it is given the option of
+starting a @dfn{continuation item} which continues the discussion under
+a new subject.  Discussions naturally wander from one subject to
+another, and the subject of the continuation can be chosen to reflect
+the new topic.
+@cindex Continuation items
+@cindex Usenet threads
+@end itemize
+
+@dfn{GREED} stands for @dfn{Groggs Reader/Editor with Emacs Display} and
+is a client that runs under GNU Emacs and XEmacs and can be used for reading,
+replying to, and editing Groggs.
+@cindex Greed, defined
+@c
+@c ---------------------------------------------------------------------
+@node Installation, Getting started, Introduction, Top
+@chapter Installing Greed
+@cindex Installation
+@cindex Makefile
+
+In order to run Greed, you will a copy of GNU Emacs or XEmacs (version
+19.20 or later) with network and process support.
+
+@section Your e-mail address
+@vindex user-mail-address
+@cindex E-mail address
+
+Greed needs to know your e-mail address, which should be stored in the
+variable @code{user-mail-address}.  If this is incorrect (type 
+@kbd{C-h v user-mail-address @key{RET}} to see the value of the
+variable) you'll need to add a line to your @file{.emacs} file to change
+it.  For example:
+
+@example
+(setq user-mail-address "me@@my.host.name")
+@end example
+
+@section Using an existing Greed installation
+
+You need to know the location of the three files @file{greed.elc},
+@file{greed-md5.elc} and @file{greed.info}, and make sure that the first
+two files are in a directory listed in the variable @code{load-path} and
+the third is in a directory listen in variable
+@code{Info-default-directory-list}.
+
+For example, if the directories are @file{/usr/gnu/emacs/site-lisp/} and
+@file{/usr/info/} respectively, then you would put the following in your
+@file{.emacs} file:
+
+@example
+(setq load-path (cons "/usr/gnu/emacs/site-lisp/" load-path))
+(setq Info-default-directory-list
+      (cons "/usr/info/" Info-default-directory-list))
+@end example
+
+You also need to add the following line to your @file{.emacs} file:
+
+@example
+(autoload 'greed "greed" "Read Groggs" t)
+@end example
+
+To run Greed, start Emacs and type @kbd{M-x greed RET}.
+
+@section Files in the Greed distribution
+
+If Greed is not installed, you need to fetch the Greed distribution,
+which should come with the following files:
+
+@table @file
+@item greed.el
+The Greed program in Emacs LISP
+@item greed-md5.el
+The MD5 Message Digest program in Emacs LISP
+@cindex MD5 program
+@item greed-help-macro.el
+A port of help-macro.el to XEmacs.
+@item README
+Installation manual
+@item greed.texi
+Texinfo source for the Greed manual
+@item Makefile
+Makefile for compiling and testing
+@end table
+
+@section Quick installation
+
+Unpack the greed distribution, and type @samp{make install} at the shell
+prompt.  The Emacs LISP files will be put in the directory
+@file{~/elisp/}, the Info manual in the directory @file{~/info/} and
+your @file{.emacs} file will be updated.  To run Greed, start Emacs and
+type @kbd{M-x greed RET}.
+
+@section Advanced installation.
+
+@enumerate
+@item
+If necessary, edit the file @file{greed.el} and change the declaration
+of the @code{greed-servers} variable to the appropriate value(s) for
+your system.  @xref{Server list}, for a description of the contents
+of this variable.  The default value of this variable should be fine if
+you intend to connect only to the Cambridge Groggs server.
+
+@item
+Edit the definition of @code{UPDATE_DOT_EMACS} in the file
+@file{Makefile}.  Set it to @code{true} if you want your @file{.emacs}
+file to be automatically updated (and if so, omit steps 3 and 5), or
+anything else if you don't.
+
+@item
+Edit the definitions of @code{ELISPDIR} and @code{INFODIR} in the file
+@file{Makefile}.  @code{ELISPDIR} is the directory in which you keep
+Emacs LISP programs: it must be on the Emacs variable @code{load-path};
+if necessary add a new directory to @code{load-path} by putting
+
+@example
+(setq load-path (cons "~/elisp/" load-path))
+@end example
+
+or something similar in your @file{.emacs} file.  @code{INFODIR} is the
+directory in which you keep Info documentation: it must be on the Emacs
+variable @code{Info-default-directory-list}; if necessary add a new
+directory to @code{Info-default-directory-list} by putting
+
+@example
+(setq Info-default-directory-list 
+      (cons "~/info/" Info-default-directory-list))
+@end example
+
+or something similar in your @file{.emacs} file.
+
+@item
+Run @code{make install}.
+
+@item
+Put the following in your @file{.emacs} file:
+
+@example
+(autoload 'greed "greed" "Read Groggs" t)
+@end example
+@end enumerate
+@c
+@c ---------------------------------------------------------------------
+@node Getting started, Reading, Installation, Top
+@chapter Getting started
+@cindex Starting Greed
+
+To start Greed in the usual way, type @kbd{M-x greed RET}.  Greed tries
+to connect to the default Groggs server, namely the server listed first
+in the variable @code{greed-servers}. (@pxref{Server list})
+
+If you wish to choose which server to connect to, call @code{greed} with
+a prefix argument (that is, type @kbd{C-u M-x greed}).
+@cindex Choosing a server
+
+If you wish to change your account or pasword on a server, call
+@code{greed} with two prefix arguments (that is, type @kbd{C-u C-u M-x
+greed}).  If started like this, Greed doesn't read your options file or
+your password file, so it prompts you again for your e-mail address and
+password.  (@pxref{Logging in})
+@cindex Account, changing
+@cindex Password, changing
+@cindex Options file, not reading
+@cindex Password file, not reading
+
+When connecting to a server for the first time, Greed doesn't know your
+userid or password, and will offer you two options: to register with the
+server (by typing @kbd{r}) or to login immediately (by typing @kbd{l}).
+Choose the second option if you already have an account and password on
+the server; choose the first option if you don't.
+@cindex Registering
+@cindex Logging in
+
+@menu
+* Registering::         Creating an account on a Groggs server
+* Logging in::          Telling Greed your password.
+@end menu
+@c
+@c ---------------------------------------------------------------------
+@node Registering, Logging in, , Getting started
+@section Registering with a Groggs server
+@cindex Registering
+@cindex Server, registering with
+
+If you don't have an account and password on the Groggs server, you
+should choose to register (by typing @kbd{r}) when offered a choice
+between registering and logging in.
+
+Registering takes place so that the server can send you your secret
+password by e-mail, and in future confirm that you are who you say you
+are.  Note that not all servers will require registration, and some
+servers have @dfn{guest} accounts that will allow you to read Groggs
+without having to register (but you will typically need to register to
+post replies).  If this is the case, skip this step and go straight to
+logging in.  (@pxref{Logging in})
+@cindex Guest account, using
+@cindex Account, acquiring
+@cindex Password, acquiring
+
+You will be prompted for your e-mail address and then Greed will send a
+registration request to the server.  If successful, you will be sent
+your password by e-mail; wait for it to arrive and then run Greed again
+and choose to login immediately.  (@pxref{Logging in})
+@cindex E-mail address, registering with
+@cindex E-mail, receiving password by
+
+@section If registering is not allowed
+
+For security reasons, a Groggs server may choose not to allow automatic
+registrations, or may only allow them within a certain domain (for
+example, the Cambridge Groggs server only allows registrations for
+people with an e-mail address in the @code{cam.ac.uk} domain).
+
+If you cannot register automatically, you must contact the Groggs
+Editors by e-mail and ask them for an account and password.
+@c
+@c ---------------------------------------------------------------------
+@node Logging in, , Registering, Getting started
+@section Logging in to a Groggs server
+@cindex Server, logging in to
+@cindex Logging in
+@cindex Account, using
+
+If you have an account on the Groggs server, or you have received your
+password by e-mail after registering, you should choose to login
+immediately (by typing @kbd{l}) when offered a choice between
+registering and logging in.
+@cindex E-mail, receiving password by
+
+You will be prompted for your e-mail address and password (use the same
+e-mail address as you used when you registered with the server).  After
+logging in, your password will be stored in the password file and your
+userid will be stored (along with other options) in the options file.
+You should not need to type your password again, unless it changes.
+@cindex E-mail address, logging in with
+@cindex Password, using
+@cindex Options file, saving userid in
+@cindex Password file, saving password in
+
+If the server has a guest account and you want to use it, then type
+@kbd{guest} (or whatever the name of the guest account is) for your
+e-mail address, and just press @key{RET} when asked for a password.
+@cindex Guest account, using
+@c
+@c ---------------------------------------------------------------------
+@node Reading, Replying, Getting started, Top
+@chapter Reading Groggs
+@cindex Reading Groggs
+
+When Greed starts up, it fetches the index of items from the server, and
+displays them, one per line, in the index buffer.  Here's a typical
+line in the index:
+@cindex Index of items
+@cindex Index buffer
+
+@example
+*  14 djs@@dcs.ed 11 Sep 12:46 Choosing THE successor to PHOENIX Groggs
+@end example
+
+From left to right, the line shows an asterisk if the item has replies
+which you haven't read yet, the number of replies the item has received,
+the userid of the person who made the most recent reply to the item, the
+time at which they made the reply, and the item's subject.
+@cindex Subject of items
+
+When reading an item, the display is usually split so that the index
+occupies half a dozen lines at the top of the screen, and the item
+itself occupies the remainder of the screen.
+
+@menu
+* Reading commands::    Commands for reading items
+* Reading options::     Options controlling the display of the index
+* Killing::             Controlling which items you see
+* Misc commands::       Miscellaneous Index Mode commands
+@end menu
+@c
+@c ---------------------------------------------------------------------
+@node Reading commands, Reading options, , Reading
+@section Commands for reading Groggs
+@cindex Reading Groggs
+
+The @dfn{current item} is the item on the same line as point in the
+index buffer.  In Index Mode, these commands are available for reading
+items:
+@cindex Current item
+
+@table @kbd
+@item @key{SPC}
+If the current item is not displayed, display it in another window.  If
+the current item is already displayed, scroll it down by a page.  If the
+end of the item has been reached, select the next item in the list.
+With a prefix argument (e.g., @kbd{C-5 @key{SPC}}), scroll downward by
+that number of lines.
+@cindex Scrolling items forward
+
+@item @key{DEL}
+Display the current item, and scroll it up by a page.  With a prefix
+argument (e.g., @kbd{C-5 @key{SPC}}), scroll upward by that number of
+lines.
+@cindex Scrolling items backward
+
+@item @key{RET}
+Display the current item, and scroll it down by one line.  With a prefix
+argument, act like @key{SPC}.
+@cindex Scrolling items forward
+
+@item n
+@itemx @key{down}
+@itemx C-n
+Move to the next item in the index.  @dfn{Next} here means downward in
+the index buffer.
+@cindex Next item
+
+@item p
+@itemx @key{up}
+@itemx C-p
+Move to the previous item in the index.  @dfn{Previous} here means
+upward in the index buffer.
+@cindex Previous item
+
+@item <
+@itemx ,
+Display the current item and scroll to the beginning.
+@cindex Scrolling items to the beginning
+
+@item >
+@itemx .
+Display the current item and scroll to the first unread reply, if any,
+or to the end of the item, if none.
+@cindex Scrolling items to the end
+
+@item ^
+@itemx b
+If the current item is a continuation of some other item, display that
+other item.  Known as @dfn{backward chaining}.
+@cindex Backward chaining
+@cindex Continuation items
+@cindex Chaining
+
+@item f
+If the current item has been continued in some other item, display that
+other item.  Known as @dfn{forward chaining}.
+@cindex Forward chaining
+
+@item c
+Catch up all items (that is, mark all the replies as having been read,
+whether you've read them or not).
+@cindex Catching up
+
+@item g
+Get new items and replies from the server, if any.  Items with unread
+replies will be marked with asterisks in the index buffer, and any
+visible item buffers will be refreshed from the server.
+@cindex Getting new items
+@cindex Updating index
+
+@item l
+List items (redisplay the Index buffer).
+
+@item m
+Reads the server's @dfn{message of the day}.
+@cindex Message of the day, viewing
+
+@item s
+Save the current item to a file.  You will be prompted for a filename to
+save it in.
+@cindex Saving items to files
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Reading options, Killing, Reading commands, Reading
+@section Options for reading Groggs
+@cindex Options
+
+The @kbd{o} key brings up a menu of options.  These options are relevant
+to reading Groggs items:
+
+@table @kbd
+@item o f
+Change the directory in which items will be saved to files.  When you
+save an item, you are offered a file in this directory.
+@cindex Saving items option
+
+@item o h
+Change the height of the index window.  By default the height of the
+index window is 10; if your screen is particularly tall or short you may
+need to change this.
+@cindex Index height option
+
+@item o a
+Toggle the automatic updating of the index.  If updating is turned on,
+then Greed will query the server for new items and replies every 5
+minutes (as if you had typed @kbd{g}).  The interval between these
+queries, in seconds, is given by the @code{greed-timer-secs} variable.
+@cindex Automatic updating of index
+@vindex greed-timer-secs
+
+@item o i
+Toggle whether or not itemids are displayed.  @dfn{Itemids} are internal
+codes representing items (so two items with the same subject won't ever
+be confused).  An itemid starts with a letter representing the year the
+item was started, then three digits giving the day of the year, then
+four digits giving the time of day.
+@cindex Itemid display option
+
+@item o I
+Read this Info documentation.
+@cindex Documentation, options
+
+@item o n
+Toggle whether you are a novice or an experienced user (by default you
+are considered to be a novice).  If you are a novice user, you will be
+prompted before some irrevocable actions like quitting, or replying to
+an item, and some help messages will appear in the message area.
+@cindex Novice option
+@cindex Experienced option
+
+@item o o
+Toggle the order of the index.  By default, the index is
+reverse-ordered, with the most recent items at the top of the index,
+but you can change the order so that the most recent items are at the
+bottom of the index.
+@cindex Order option
+@cindex Reverse order option
+
+@item o s
+Toggle the field on which the index is sorted.  By default, the index is
+sorted by the last reply to an item, and the index shows the userid of
+the person who made that last reply, and the time of their reply.  You
+can change the sorting so that the items appear in order of the time
+they were started (and the index then shows the userid of the person who
+started the item and the time they started it).
+@cindex Sorting option
+
+@item o t
+Toggle the display of item threads in the index.  When threads are
+displayed, the continuations of an item are listed next to the item
+(sorted according to the most recent continuation), and items that have
+become full (hence no longer available for replying to) are shown with
+their subject indented.  By default, threads are displayed.
+@cindex Threads option
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Killing, Misc commands, Reading options, Reading
+@section Killing items you don't like
+@cindex Killing items
+@cindex Options file, storing killed items
+@cindex Unkilling items
+
+If you find an item boring or offensive, you can @dfn{kill} it so that
+it doesn't appear in the index.  Type @kbd{k} to kill the current item.
+The options file keeps track of which items you have killed.
+
+Should you ever regret killing an item, type @kbd{L} to list all items
+(including killed items).  The index will put a @samp{K} in the second
+column to indicate that an item has been killed.  You can then type
+@kbd{u} to unkill an item.
+@c
+@c ---------------------------------------------------------------------
+@node Misc commands, , Killing, Reading
+@section Miscellaneous Index Mode commands
+
+@table @kbd
+@item I
+Read the Info documentation.
+@cindex Documentation, reading
+
+@item z
+Suspend Groggs (without quitting).  Restores the windows you were
+looking at before you started reading Groggs.  You can return to Groggs
+by typing @kbd{M-x greed} again.
+@cindex Suspending Greed
+
+@item q
+Quit reading Groggs.  All your options will be saved in the options
+file, and if this was your first session, or your password for this
+server has changed, then your password will be saved in the password
+file.
+@cindex Password file, saving
+@cindex Options file, saving
+
+@item Q
+Quit reading Groggs without saving any startup files.
+@cindex Quitting Greed
+
+@item v
+Print the current version number of Greed in the message area.
+@cindex Version number
+
+@item ?
+Describe the commands available in Index Mode.
+
+@item M-x greed-index-collate
+Collate all the Groggs items at the server into one buffer and display
+the result.  Use of this command is likely to involve lots of network
+traffic, so please use sparingly.
+@cindex Collate command
+
+@item M-x greed-index-stats
+Compile a table of statistics showing how many posts each Groggs user
+has made to the server.  Use of this command may be illegal in the UK
+under the Data Protection Act, so consult a lawyer if in doubt.
+@cindex Statistics command
+@cindex Data Protection Act
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Replying, Editing, Reading, Top
+@chapter Replying to Groggs
+
+In Index Mode, these commands may be used for starting new items and
+replying to existing items:
+
+@table @kbd
+@item i
+Start a new item.  You are presented with an empty buffer in which to
+type the text of the new item.  When finished, type @kbd{C-c C-c} to
+post it to the Groggs server (you will be prompted for a subject for the
+item), or type @kbd{C-c C-q} if you have second thoughts and don't want
+to start a new item after all.
+@cindex Starting new items
+
+@item r
+Reply to the current item.  You are presented with an empty buffer in
+which to type the text of your reply.  When finished, type @kbd{C-c C-c}
+to post your reply to the Groggs server, or type @kbd{C-c C-q} if you
+have second thoughts and don't want to reply to the item after all.
+@cindex Replying to items
+@end table
+
+In both cases, you can type @kbd{C-c C-i} to read this Info
+documentation.
+
+@menu
+* Grognames::           How to set a grogname for your reply
+* Continuations::       What to do when an item is full
+* Multiple replies::    How to reply to several items at the same time
+@end menu
+@c
+@c ---------------------------------------------------------------------
+@node Grognames, Continuations, , Replying
+@section How to set your grogname
+@cindex Grognames
+
+A @dfn{grogname} is an identifying string that appears on your replies
+as well as your userid.  It could be your real name:
+
+@example
+Reply from John Hacker (jrh@@hack.co.uk) at 17.57 on Fri 15 Sep
+@end example
+
+or a nickname:
+
+@example
+Reply from the Wombat (jrh@@hack.co.uk) at 13.05 on Mon 11 Dec
+@end example
+
+or a favourite short quotation, or whatever.  There are four ways in
+which you can specify your grogname:
+
+@enumerate
+@item
+Greed has an idea of your @dfn{default grogname}, which it puts on your
+replies unless you specify otherwise.  To set or change your default
+grogname, type @kbd{o g} in Index Mode and then enter your grogname.  If
+you @emph{have} specified otherwise, type @kbd{o d} in Index Mode to go
+back to using the default.
+@cindex Default grogname
+
+@item
+You might want to put a different grogname on each of your replies.  To
+do this, type @kbd{o p} in Index Mode; then, whenever you post a reply
+you will be prompted for a grogname to be used for that reply.  The
+grogname you type becomes the default.
+@cindex Prompting for a grogname
+
+@item
+You might want a grogname to be chosen randomly from a list each time
+you reply.  To do this, type @kbd{o r} in Index Mode.  Your grogname
+will be picked at random from the list @code{greed-grogname-list}.
+(@pxref{Grogname list})
+@cindex Random grogname
+@vindex greed-grogname-list
+
+@item
+You might start composing a reply and then decide that you want to
+choose a grogname for that reply only (without affecting your default
+grogname).  To do this, type @kbd{C-c C-p} to post your reply instead of
+typing @kbd{C-c C-c}.  You will be prompted for a grogname which will be
+used for that reply only.
+@cindex Grogname, for one reply only
+
+If you want to produce a reply consisting @emph{only} of a grogname,
+start composing a reply and then type @kbd{C-c C-p} immediately.  If the
+grogname is long enough, it will be shown on a separate line in the
+item:
+@cindex Grogname, as complete reply
+
+@example
+Reply from jrh@@hack.co.uk at 8.52 on Tue 28 May
+From Surely that's not how you spell "Machete"?
+@end example
+@end enumerate
+@c
+@c ---------------------------------------------------------------------
+@node Continuations, Multiple replies, Grognames, Replying
+@section What to do when an item is full
+@cindex Continuation items
+
+If you try to submit a reply that would make an item longer than the
+maximum allowed item size, then you are instead offered these options:
+
+@table @kbd
+@item c
+Post your reply as the start of a continuation item.  You will be
+prompted for the subject line of the continuation item.
+
+@item e
+Go back to editing your reply, with the aim of posting it as the start
+of a continuation item.
+
+@item r
+Go back to editing your reply, with aim of attempting to reply to the
+same item again.  If you reduce the size of your reply enough, you may
+be able to get it to fit into the old item.
+
+@item a
+Abandon your reply.
+@end table
+
+If you try to submit a reply to an item that has already been continued
+(or you have been editing a reply with the intention of starting a
+continuation item, but someone else got there before you did), you will
+be offered these options:
+
+@table @kbd
+@item r
+Post your reply to the continuation item.
+
+@item e
+Go back to editing your reply, with the aim of replying to the
+continuation item.
+
+@item a
+Abandon your reply.
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Multiple replies, , Continuations, Replying
+@section How to reply to several items at the same time
+@cindex Multiple replies
+@cindex Composition buffer
+
+Sometimes it might happen that you are in the middle of composing a
+reply to an item and you decide that you want to reply to a different
+item before you finish this reply.  If you went to the index buffer,
+selected a different item and typed @kbd{r}, you would be informed that
+a composition was already in progress, and asked if you wanted to erase
+it.  Instead, you should rename your composition buffer with @kbd{M-x
+rename-uniquely} before starting a new reply.  The renamed composition
+buffer will be called something like @samp{*composition*<2>} and you can
+return to it using @kbd{C-x b *composition*<2> @key{RET}}.
+@c
+@c ---------------------------------------------------------------------
+@node Editing, Customisation, Replying, Top
+@chapter Editing
+@cindex Editing Groggs
+
+In Index Mode, type @kbd{e} for the editing menu.  One command on this
+menu is available to everyone:
+
+@table @kbd
+@item e l
+Read the edit log.  This is a list of edits made by the Groggs editors,
+with the date and time the edit was made and the reason the edit.  The
+actual text removed (if any) is not shown.
+@cindex Edit log, viewing
+@end table
+
+If you are a Groggs editor, then the following additional commands are
+available:
+@cindex Editors
+
+@table @kbd
+@item e e
+Enable/disable editing.  Editing must be enabled before any of the
+editing commands work.  This is so that it's difficult to edit an item
+by making a typing mistake.  It is recommended that editors enable
+editing before making any edits, and disable it immediately afterwards as
+a precaution.
+@cindex Enabling editing
+@cindex Disabling editing
+
+@item e d
+Fetch the editing diffs for the current item.  To fetch the editing
+diffs for the index, provide a prefix argument: @kbd{C-u e d}.
+@cindex Editing diffs
+@cindex Index diffs
+
+@item e i
+Edit the current item.  The full text of the item will be fetched into a
+buffer; you should make the necessary edits and then type @kbd{C-c C-c}
+to confirm the edits with the server, or @kbd{C-c C-q} to abandon the
+edit.
+@cindex Editing items
+
+Note (1): the item is fetched in its @dfn{raw} form.  That is, before
+every reply in the item, there is a @dfn{magic cookie} starting with a
+@code{^} and containing a sequence number and a timestamp.  When reading
+items, Greed uses the cookies to make reply headers bold, and then
+removes the cookies.  In order to prevent people from inserting fake
+cookies into the item, any other line starting with a @code{^} has been
+changed to start with @code{^^} instead.  You should leave the cookies
+in place and respect the @code{^}-doubling convention.
+@cindex Magic cookies
+@cindex Raw item text
+
+Note (2): the first line of the item is special and unless you know what
+you're doing it is best to leave it alone.
+
+Note (3): in order to prevent two editors from editing something at the
+same time, Greed acquires an @dfn{editing lock} that prevents another
+editor making an edit until you're finished.  If you don't finish your
+edit quickly enough, the server is at liberty to remove the lock and
+prevent you from making an edit.  If this happens to you, the only thing
+to do is start the edit again and perform it more quickly!
+@cindex Editing lock
+
+@item e I
+Read this info documentation.
+@cindex Documentation, editing
+
+@item e x
+Edit the index.  The full text of the index is fetched and placed in a
+buffer for you to edit.  As usual, type @kbd{C-c C-c} to confirm the
+edit and @kbd{C-c C-q} to abandon it.  Although the server will make
+some sanity checks on the result of your edits, you should take care to
+preserve the format of the index.
+@cindex Editing the index
+
+@item e m
+Edit the message of the day.  The text of the current message of the
+day, if any, is fetched and placed in a buffer for you to edit.  As
+usual, type @kbd{C-c C-c} to confirm the edit and @kbd{C-c C-q} to
+abandon it.
+@cindex Editing the message of the day
+
+Note: the first line of the message of the day has a special meaning
+defined by the server.  Unless you know what you're doing, then if
+editing an old message, leave the first line alone; and if composing a
+new one, leave the first line blank.
+@end table
+
+@c ---------------------------------------------------------------------
+@node Customisation, Concept index, Editing, Top
+@chapter Customisation
+
+@menu
+* Server list::         The list of Groggs servers you can connect to
+* Grogname list::       List of grognames you have used
+* Security::            A way of turning on additional security
+* Variables::           Variables affecting the behaviour of Greed
+* Hooks::               Hooks for adding functionality
+* Colours::             Adding colours to Greed's buffers
+@end menu
+@c
+@c ---------------------------------------------------------------------
+@node Server list, Grogname list, , Customisation
+@section List of Groggs servers
+@cindex Servers, configuring
+@vindex greed-servers
+
+The variable @code{greed-servers} is a list of descriptions of Groggs
+servers.  Each member of the list should be a list of five elements in
+the form @code{(name server-host server-port options-file
+password-file)}, where the components have the following meanings:
+
+@table @code
+@item name
+A descriptive name for the Groggs server.
+@item server-host
+The Internet host on which the Groggs server runs.
+@cindex Internet host
+@item server-port
+The network port on which to connect to the Groggs server.  The RGTP
+protocol has been allocated port number 1431 by the Internet Assigned
+Numbers Authority, so this should be the right number in almost all
+cases.
+@cindex RGTP port number
+@cindex Port number
+@item options-file
+The file in which to save the user's options.
+@cindex Options file, name of
+@item password-file
+The file in which to save the user's secret password.  This is different
+from the options file, because in order to keep the password secret this
+file must not be readable by anyone other than the user.
+@cindex Password file, name of
+@end table
+
+For example, if you want to read Groggs on the server run by Yoyodyne,
+Inc., you would do somethings like this:
+
+@example
+(setq yoyodyne-groggs-server
+      '("Yoyodyne's Groggs server" "groggs.yoyodyne.com" 1431
+        "~/.yoyogrog" "~/.yoyosecret"))
+@end example
+
+If the Yoyodyne server were the only server you wanted to connect to,
+you would then use
+
+@example
+(setq greed-servers (list yoyodyne-groggs-server))
+@end example
+
+but if you wanted to connect to the Yoyodyne server in addition to all
+the standard servers, you would use the following instead.
+
+@example
+(eval-after-load "greed"
+ (setq greed-servers (cons yoyodyne-groggs-server greed-servers)))
+@end example
+
+The first server on the list is the default server.  If Greed is started
+up with no argument, then that server is the one it attempts to connect
+to.  @xref{Getting started}.
+@c
+@c ---------------------------------------------------------------------
+@node Grogname list, Security, Server list, Customisation
+@section List of grognames
+@cindex Grognames, list of
+@vindex greed-grogname-list
+@vindex greed-no-save-grognames
+
+The variable @code{greed-grogname-list} is a list of lists, each of
+which contains a single string.  A typical value might be
+
+@example
+'(("John Hacker")("J. Random Hacker")("the Wombat"))
+@end example
+
+Unless the variable @code{greed-no-save-grognames} is non-NIL, then
+whenever you type in a new grogname it is added to the list.  Thus
+(unless you edit your options file) random grognames (should you require
+them) are selected from the list of all the grognames you have used in
+the past.
+@cindex Random grogname
+@c
+@c ---------------------------------------------------------------------
+@node Security, Variables, Grogname list, Customisation
+@section Turning on additional security
+@cindex Security, additional
+@cindex Authentication, additional
+@vindex greed-paranoid
+
+If the variable @code{greed-paranoid} is non-NIL, then the following
+security features are enabled:
+
+@enumerate
+@item
+You are prompted before your password is written to a file.
+@cindex Password file, prompting before saving
+
+@item
+You are warned if a server lets you login without authentication.
+
+@item
+Greed attempts to authenticate the server, and warns you if the server
+fails the test.
+@cindex Servers, authentication of
+@end enumerate
+@c
+@c ---------------------------------------------------------------------
+@node Variables, Hooks, Security, Customisation
+@section Variables affecting the behaviour of Greed
+
+@table @code
+@item greed-debug
+If non-nil, then Greed doesn't kill its buffers when you quit (or when
+an error occurs), and all communications with the server are written to
+the buffer @samp{*greed-log*}.  Best left at its default value, nil.
+@vindex greed-debug
+@cindex Debugging option
+
+@item greed-grogname-list
+List of grognames that the user has held.  @xref{Grogname list}.
+
+@item greed-index-userid-length
+The length of the userid field in the index buffer.  Since userids can
+be up to 75 characters long, they must be truncated to fit on the screen
+with the rest of the information.  By default it is 10.
+@vindex greed-index-userid-length
+@cindex Userid, length
+@cindex Index buffer
+
+@item greed-item-subject-width
+The length to which the subject of an item is truncated when it appears
+in the mode line of an item buffer.
+@cindex Item buffer
+@cindex Subject, length
+@vindex greed-item-subject-width
+
+@item greed-no-save-grognames
+If non-nil, then grognames aren't saved in the variable
+@code{greed-grogname-list}.  By default it is nil.  @xref{Grogname
+list}.
+@cindex Grognames, saving
+@vindex greed-no-save-grognames
+@vindex greed-grogname-list
+
+@item greed-paranoid
+If non-nil, then some security features are turned on.  By default it is
+nil.  @xref{Security}.
+
+@item greed-save-old-versions
+If non-nil, then before the options file and the password file are
+saved, their old versions are copied to backup files ending in the
+extension @file{.old}.  By default it is t.
+@vindex greed-save-old-versions
+@cindex Password file, backups
+@cindex Options file, backups
+
+@item greed-save-variables-list
+List of symbols whose values should be saved in the options file.  They
+should all be variables whose @code{princ} representation is the same as
+their read syntax (essentially this restricts them to strings, numbers,
+nil and t).  The variable @code{greed-grogname-list} is also saved, but
+it is given special treatment.
+@vindex greed-save-variables-list
+@cindex Options file, variables saved in
+
+@item greed-servers
+List of servers known to Greed.  @xref{Server list}.
+
+@item greed-reply-check-blank
+If non-nil, then Greed will ask if you really mean it when you attempt
+to post an entirely blank reply.  By defualt it is t.
+@cindex Blank replies, checking for
+@vindex greed-reply-check-blank
+
+@item greed-timer-secs
+The number of seconds between automatic updates of the index (if you
+have this option turned on).  By default it is 300 seconds, i.e., 5
+minutes.
+@vindex greed-timer-secs
+@cindex Automatic updating of index
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Hooks, Colours, Variables, Customisation
+@section Hooks for adding functionality
+
+@table @code
+@item greed-startup-hook
+This hook is run after you have started Greed, successfully logged into
+the server, and the index has been fetched.  This is not the right place
+to extend the @code{greed-servers} variable; instead use code of the
+form @code{(eval-after-load "greed" ...)}.
+@vindex greed-startup-hook
+
+@item greed-index-mode-hook
+This hook is run after the index buffer has been created and Index Mode
+has been entered, but before the index has been fetched from the server.
+@vindex greed-index-mode-hook
+
+@item greed-item-mode-hook
+This hook is run after Item Mode has been entered, but before any text
+has been downloaded from the server.  Note that Item Mode is used for
+the message of the day, the edit log, and other display buffers.
+@vindex greed-item-mode-hook
+
+@item greed-item-prepare-hook
+This hook is run after the text of an item has been fetched and
+processed, but before it is shown to the user.
+@vindex greed-item-prepare-hook
+
+@item greed-reply-mode-hook
+This hook is run after entering Reply Mode, that is, just after the user
+has decided to reply to an item, start a new item (and so on) and the
+reply buffer has been set up.
+@vindex greed-reply-mode-hook
+
+@item greed-index-redraw-hook
+This hook is run after the index (or a part thereof) is redrawn.
+Intended for use by syntax-highlighting extensions.
+@vindex greed-index-redraw-hook
+@end table
+@c
+@c ---------------------------------------------------------------------
+@node Colours, , Hooks, Customisation
+@section Adding colours to Greed's buffers
+@cindex Colours
+@cindex Stephen Turner
+
+Stephen Turner suggested the following piece of code for adding colour
+to Greed, using the @code{hilit19} package distributed with GNU Emacs.
+Add the code to your @file{.emacs} file.
+
+@example
+(require 'hilit19)
+
+(hilit-set-mode-patterns
+ 'greed-item-mode
+ '(("^Reply from .*$" nil msg-from)
+   ("^From .*$" nil msg-from)
+   ("^Item [A-Z][0-9]+ from .*$" nil msg-header)
+   ("^Subject: .*$" nil msg-subject)
+   ("^\\[Continued in [A-Z][0-9]+ by .*$" nil crossref)))
+
+(hilit-set-mode-patterns
+ 'greed-index-mode
+ '(("^\\*.*$" nil gnus-group-full)))
+
+(add-hook 'greed-item-prepare-hook 'hilit-rehighlight-buffer)
+(add-hook 'greed-index-redraw-hook 'hilit-rehighlight-buffer)
+@end example
+@c
+@c ---------------------------------------------------------------------
+@node Concept index, Variables index, Customisation, Top
+@unnumbered Concept Index
+
+@printindex cp
+
+@c ---------------------------------------------------------------------
+@node Variables index, , Concept index, Top
+@unnumbered Variables Index
+
+@printindex vr
+
+@contents
+@bye
