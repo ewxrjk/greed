@@ -1,0 +1,16 @@
+#! /bin/sh
+set -e
+
+FLAVOR="$1"
+PACKAGE=greed
+
+case "$FLAVOR" in
+emacs )
+  exit 0
+  ;;
+esac
+
+echo "remove/${PACKAGE}: purging byte-compiled files for ${FLAVOR}"
+
+rm -rf "/usr/share/${FLAVOR}/site-lisp/${PACKAGE}"
+rm -f "/etc/${FLAVOR}/site-start.d/50greed.el"

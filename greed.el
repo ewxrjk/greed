@@ -81,6 +81,13 @@
       (if (not (featurep 'help-macro))
 	  (require 'help-screen)))))
 
+;; Events are opaque objects in XEmacs 21, but you have to interpret
+;; their structure in other versions.
+(defun greed-button-test (e)
+  (if (functionp 'button-press-event-p)
+      (button-press-event-p event)
+    (eq (car e) 'mouse-2)))
+
 
 ;;; Variables -----------------------------------------------------------------
 
@@ -296,6 +303,27 @@ Will be less if the itemid is printed too.")
 (defvar greed-old-window-config nil)	; Window config before reply composed.
 (defvar greed-action-to-be nil)		; What action to take (reply/new/etc).
 
+;; Variables related to highlighting
+
+(defvar greed-index-mode-font-lock-keywords
+  '(
+    ; highlight unread items
+    ("^\\*.*" 0 greed-unread-face)
+    )
+  "Font locking for Greed index buffer")
+(defvar greed-item-mode-font-lock-keywords
+  '(
+    ; highlight item headers
+    ("^Item [A-Z][0-9]+ from \\S-+@\\S-+ at [0-9]+\\.[0-9]+ on \\([A-Z][a-z]+ \\)?[0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-item-header-face)
+    ("^Item [A-Z][0-9]+ from .* (\\S-+@\\S-+) at [0-9]+\\.[0-9]+ on \\([A-Z][a-z]+ \\)?[0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-item-header-face)
+    ; highlight reply separators
+    ("^Reply from \\S-+@\\S-+ at [0-9]+\\.[0-9]+ on [A-Z][a-z]+ [0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-reply-separator-face)
+    ("^Reply from .* (\\S-+@\\S-+) at [0-9]+\\.[0-9]+ on [A-Z][a-z]+ [0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-reply-separator-face)
+    )
+  "Font locking for Greed item buffer")
+(defvar greed-syntax-table nil
+  "Syntax table for Greed index mode")
+
 
 ;;; XEmacs compatibility ------------------------------------------------------
 
@@ -353,6 +381,56 @@ Will be less if the itemid is printed too.")
 			     (intern (concat "greed-menu-" (car (reverse (car menus))))))
 		     (cons (car (reverse (car menus))) (car menus))))
     (setq menus (cdr menus))))
+
+
+;;; Customization -------------------------------------------------------------
+
+(defgroup greed nil
+  "Customization of Greed"
+  )
+
+(defface greed-unread-face
+  '(
+    (((class color) (background dark))
+     (:foreground "red"))
+    (((class color) (background light))
+     (:foreground "blue"))
+    (t
+     (:bold t))
+    )
+  "Face used for items with unread gossip"
+  :group 'greed
+  )
+(defvar greed-unread-face 'greed-unread-face
+  "Face used for items with unread gossip")
+
+(defface greed-item-header-face
+  '(
+    (((class color) (background dark))
+     (:foreground "green"))
+    (((class color) (background light))
+     (:foreground "green"))
+    (t
+     (:bold t))
+    )
+  "Face used for item headers"
+  :group 'greed)
+(defvar greed-item-header-face 'greed-item-header-face
+  "Face used for item headers")
+
+(defface greed-reply-separator-face
+  '(
+    (((class color) (background dark))
+     (:foreground "green"))
+    (((class color) (background light))
+     (:foreground "green"))
+    (t
+     (:bold t))
+    )
+  "Face used to for reply separators within items"
+  :group 'greed)
+(defvar greed-reply-separator-face 'greed-reply-separator-face
+  "Face used to for reply separators within items")
 
 
 ;;; Miscellaneous utilities ---------------------------------------------------
@@ -914,6 +992,7 @@ t  toggle whether item Threads are displayed."
   (define-key greed-index-mode-map "o" 'greed-options-help)
   (define-key greed-index-mode-map " " 'greed-index-scroll-item-forward)
   (define-key greed-index-mode-map "\177" 'greed-index-scroll-item-backward)
+  (define-key greed-index-mode-map [backspace] 'greed-index-scroll-item-backward)
   (define-key greed-index-mode-map "\r" 'greed-index-scroll-item-one-line)
   (define-key greed-index-mode-map "n" 'greed-index-next-item)
   (define-key greed-index-mode-map "p" 'greed-index-prev-item)
@@ -945,7 +1024,16 @@ t  toggle whether item Threads are displayed."
   (define-key greed-index-mode-map "u" 'greed-index-unkill-item)
   (define-key greed-index-mode-map "v" 'greed-index-version)
   (define-key greed-index-mode-map "z" 'greed-index-suspend)
+  (define-key greed-index-mode-map [button2] 'greed-index-mouse-item)
+  (define-key greed-index-mode-map [mouse-2] 'greed-index-mouse-item)
   (define-key greed-index-mode-map "?" 'describe-mode))
+
+; We have a local syntax table because otherwise we get the standard one
+; which defines " as string delimeter, which makes no sense in an index
+; buffer (and mucks up the highlighting).  Ditto the item buffer.
+(if greed-syntax-table ()
+  (setq greed-syntax-table (make-syntax-table))
+  (modify-syntax-entry ?\" "." greed-syntax-table))
 
 (defun greed-index-mode ()
   "GREED Index Mode: a major mode for reading GROGGS.
@@ -1042,6 +1130,11 @@ further details\):
   (greed-set-modified "--- ")
   (greed-install-menus greed-index-actions-menu greed-index-options-menu
 		       greed-index-edit-menu)
+  (set (make-local-variable 'font-lock-defaults)
+       '(greed-index-mode-font-lock-keywords nil nil nil nil))
+  (if (or greed-xemacs-p window-system)
+      (font-lock-mode))
+  (set-syntax-table greed-syntax-table)
   (run-hooks 'greed-index-mode-hook))
 
 ;; Select item N in the index buffer, where N starts at 1.
@@ -1501,6 +1594,23 @@ Returns T if GREED quit, NIL otherwise."
   (interactive "p")
   (greed-index-scroll-item lines))
 
+(defun greed-index-mouse-item (event)
+  "Jump to an item, scroll it if already there"
+  (interactive "e")
+  (cond ((greed-button-test event)
+	 (mouse-set-point event)
+	 (let ((s (greed-index-select-item (greed-index-current-data))))
+	   (cond ((eq s 0)		;item is already displayed
+		  (greed-index-scroll-item nil)
+		  )
+		 ((eq s 1)		;fetched but invisible (still)
+		  (greed-configure-windows)
+		  (greed-index-beginning-of-item)
+		  )
+		 ((eq s 3)		;we displayed it
+		  (greed-index-beginning-of-item)
+		  ))))))
+
 (defun greed-index-describe-briefly ()
   "Describe Index mode commands briefly."
   (interactive)
@@ -1920,6 +2030,11 @@ Various hooks for customisation:
 		      (greed-item-identification greed-item-data))))
     (greed-set-buffer-identification (format "GREED: %s" id))
     (setq mode-name mn))
+  (set (make-local-variable 'font-lock-defaults)
+       '(greed-item-mode-font-lock-keywords nil nil nil nil))
+  (if (or greed-xemacs-p window-system)
+      (font-lock-mode))
+  (set-syntax-table greed-syntax-table)
   (use-local-map greed-item-mode-map)
   (buffer-disable-undo (current-buffer))
   (run-hooks 'greed-item-mode-hook))
@@ -2070,7 +2185,7 @@ Various hooks for customisation:
 
 ;; Returns buffer name for item given by vector ITEM.
 (defun greed-item-buffer-name (item)
-  (concat " *Item-" (aref item greed-data-itemid) "*"))
+  (concat "*Item-" (aref item greed-data-itemid) "*"))
 
 ;; Returns name of the buffer for the current item.
 (defun greed-current-item-buffer-name ()

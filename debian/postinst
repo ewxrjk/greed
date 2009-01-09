@@ -1,0 +1,9 @@
+#! /bin/sh
+set -e
+case "$1" in
+configure )
+  /usr/lib/emacsen-common/emacs-package-install greed
+  install-info --quiet --section Emacs Emacs \
+      /usr/share/info/greed.info.gz
+  ;;
+esac

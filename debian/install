@@ -1,0 +1,40 @@
+#! /bin/sh
+set -e
+
+FLAVOR="$1"
+PACKAGE=greed
+
+case "$FLAVOR" in
+emacs )
+  exit 0
+  ;;
+xemacs* )
+  SITEFLAG="-no-site-file"
+  ;;
+* )
+  SITEFLAG="--no-site-file"
+  ;;
+esac
+FLAGS="${SITEFLAG} -q -batch -l path.el -f batch-byte-compile"
+
+echo "install/$PACKAGE: Handling install for emacsen flavor $FLAVOR"
+
+ELDIR="/usr/share/emacs/site-lisp/${PACKAGE}"
+ELCDIR="/usr/share/${FLAVOR}/site-lisp/${PACKAGE}"
+
+install -m 755 -d "$ELCDIR"
+cd "$ELDIR"
+FILES=`echo *.el`
+ln ${FILES} "${ELCDIR}"
+cd "${ELCDIR}"
+cat <<EOF > path.el
+(setq load-path (cons "." load-path) byte-compile-warnings nil)
+EOF
+${FLAVOR} ${FLAGS} ${FILES}
+rm -f *.el path.el
+
+cat <<EOF > "/etc/${FLAVOR}/site-start.d/50greed.el"
+; automatically created file, editing would be a bad idea
+(setq load-path (cons "$ELCDIR" load-path))
+(autoload 'greed "greed" "Read Groggs" t)
+EOF

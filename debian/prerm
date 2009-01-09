@@ -1,0 +1,8 @@
+#! /bin/sh
+set -e
+case "$1" in
+remove )
+  /usr/lib/emacsen-common/emacs-package-remove greed
+  install-info --quiet --remove greed
+  ;;
+esac

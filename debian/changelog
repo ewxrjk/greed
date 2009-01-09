@@ -1,0 +1,14 @@
+greed (1.3.0a.rjk.1) unstable; urgency=low
+
+  * Fontification and some mouse support.  Byte-compile at runtime in
+    the usual Debian way.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Mon, 25 Nov 2002 19:55:46 +0000
+
+greed (1.3.0a) unstable; urgency=low
+
+  * Initial Debianisation
+
+ -- Owen Dunn <owend@chiark.greenend.org.uk>  Tue,  8 Aug 2000 19:21:40 +0100
+
+

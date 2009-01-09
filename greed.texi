@@ -19,9 +19,10 @@ Copyright @copyright{} 1995-6 Gareth Rees, 2000 Owen Dunn
 @sp 2
 @center Gareth Rees, November 1995 -- March 1996
 @center Owen Dunn, 2000
+@center Richard Kettlewell, 2002
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1995 Gareth Rees, 2000 Owen Dunn
+Copyright @copyright{} 1995 Gareth Rees, 2000 Owen Dunn, 2002 Richard Kettlewell
 @end titlepage
 @c ---------------------------------------------------------------------
 @node    Top,       Introduction, (dir),    (dir)
@@ -46,7 +47,8 @@ Copyright @copyright{} 1995 Gareth Rees, 2000 Owen Dunn
 @node Copying, Introduction, Top, Top
 @chapter Copyright and licence
 
-Greed is copyright @copyright{} 1995--6 by Gareth Rees, 2000 by Owen Dunn
+Greed is copyright @copyright{} 1995--6 by Gareth Rees, 2000 by Owen
+Dunn, 2002 by Richard Kettlewell
 
 Greed is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
@@ -476,6 +478,11 @@ Save the current item to a file.  You will be prompted for a filename to
 save it in.
 @cindex Saving items to files
 @end table
+
+In addition, if you are using a terminal with a mouse, you can use the
+Mouse-2 button in the index buffer to select an item, or to scroll it if
+it is already selected.
+
 @c
 @c ---------------------------------------------------------------------
 @node Reading options, Killing, Reading commands, Reading

@@ -36,7 +36,11 @@ greed.dvi: greed.texi
 	texi2dvi greed.texi
 
 clean:
-	rm greed.elc greed-md5.elc greed-help-macro.elc greed.info
+	rm -f greed.elc greed-md5.elc greed-help-macro.elc greed.info
+
+distclean: clean
+	rm -f greed.aux greed.cp greed.cps greed.dvi greed.fn greed.ky
+	rm -f greed.log greed.pg greed.toc greed.tp greed.vr greed.vrs
 
 dist:
 	echo greed-`sed -e '/defconst greed-version/!d' \

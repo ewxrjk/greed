@@ -1,5 +1,6 @@
 GREED Change Log
 
+Added basic stuff to build a Debian package
 Fixed up itimer code for XEmacs
 Fixed menu bar code to work with emacs19
 Disable CRLF conversion for network streams for emacs20 compatibility.
