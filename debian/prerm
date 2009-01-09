@@ -2,7 +2,7 @@
 set -e
 case "$1" in
 remove )
-  /usr/lib/emacsen-common/emacs-package-remove greed
+  /usr/lib/emacsen-common/emacs-package-remove groggs-greed
   install-info --quiet --remove greed
   ;;
 esac

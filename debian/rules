@@ -9,7 +9,7 @@
 # paternity under the Copyright, Designs and Patents Act 1988.)
 # This file may have to be extensively modified
 
-package=greed
+package=groggs-greed
 
 build:
 	$(checkdir)

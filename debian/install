@@ -2,7 +2,7 @@
 set -e
 
 FLAVOR="$1"
-PACKAGE=greed
+PACKAGE=groggs-greed
 
 case "$FLAVOR" in
 emacs )
