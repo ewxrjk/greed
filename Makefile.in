@@ -72,6 +72,7 @@ distcheck: dist
 	cd greed-$(VERSION) && ./configure
 	cd greed-$(VERSION) && make
 	cd greed-$(VERSION) && make dist
+	rm -rf greed-$(VERSION)
 
 dvi: greed.dvi
 
