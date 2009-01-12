@@ -373,6 +373,7 @@ Will be less if the itemid is printed too.")
 
 (defgroup greed nil
   "Customization of Greed"
+  :group 'applications
   )
 
 (defface greed-unread-face
