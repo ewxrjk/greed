@@ -1,3 +1,9 @@
+groggs-greed (1.4.1) unstable; urgency=low
+
+  * Resolve some compilation warnings.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Mon, 12 Jan 2009 22:47:31 +0000
+
 groggs-greed (1.4) unstable; urgency=low
 
   * Bump version number to 1.4 as part of cleaning greed work up to put
