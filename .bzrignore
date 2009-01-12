@@ -1,2 +1,10 @@
 debian/tmp
 debian/files
+Makefile
+autom4te.cache
+config.log
+config.status
+configure
+*.elc
+greed.info
+install-sh

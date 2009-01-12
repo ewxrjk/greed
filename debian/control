@@ -1,10 +1,10 @@
-Source: greed
+Source: groggs-greed
 Section: net
 Priority: optional
 Maintainer: Owen Dunn <owend@chiark.greenend.org.uk>
 Standards-Version: 3.0.1
 
-Package: greed
+Package: groggs-greed
 Architecture: all
 Depends: emacsen|xemacs19|xemacs20|xemacs21
 Description: RGTP-based GROGGS reader for GNU Emacs and XEmacs

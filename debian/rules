@@ -13,8 +13,9 @@ package=groggs-greed
 
 build:
 	$(checkdir)
+	test -x configure || autoconf
+	test -x Makefile || ./configure
 	$(MAKE) info
-	touch build
 
 clean:
 	$(checkdir)
@@ -22,7 +23,7 @@ clean:
 	-$(MAKE) -i clean
 	rm -rf *~ debian/tmp debian/*~ debian/files* debian/substvars
 
-binary-indep:	checkroot build
+binary-indep:	checkroot
 	$(checkdir)
 	rm -rf debian/tmp
 	install -d debian/tmp/DEBIAN\
