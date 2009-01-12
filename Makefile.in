@@ -15,7 +15,7 @@ INFODIR = $(HOME)/info/
 DOT_EMACS = $(HOME)/.emacs
 UPDATE_DOT_EMACS = false
 EMACS = @EMACS@
-VERSION = @VERSION@
+VERSION = @PACKAGE_VERSION@
 
 # You shouldn't need to change anything below here.
 
@@ -44,19 +44,34 @@ distclean: clean
 	rm -f greed.log greed.pg greed.toc greed.tp greed.vr greed.vrs
 	rm -f Makefile
 	rm -rf autom4te.cache config.status config.log config.cache
+	rm -rf debian/tmp debian/files
 
 maintainer-clean: distclean
 	rm -f configure
 
-dist:
+changelog:
+	if bzr log > changelog.new; then mv changelog.new changelog;\
+	else rm -f changelog.new; fi
+
+dist: changelog
 	rm -rf greed-$(VERSION)
 	mkdir greed-$(VERSION)
-	cp Makefile.in configure configure.ac greed-$(VERSION|)
+	mkdir greed-$(VERSION)/debian
+	cp Makefile.in configure configure.ac greed-$(VERSION)
 	cp greed-make.el greed.el greed-md5.el greed-help-macro.el greed.texi greed-$(VERSION)
-	cp CHANGELOG README greed-$(VERSION)
+	cp changelog.old changelog README greed-$(VERSION)
+	cp debian/50greed.el debian/changelog debian/control greed-$(VERSION)/debian
+	cp debian/copyright debian/install debian/postinst greed-$(VERSION)/debian
+	cp debian/prerm debian/remove debian/rules greed-$(VERSION)/debian
 	tar cf greed-$(VERSION).tar greed-$(VERSION)
-	gzip greed-$(VERSION).tar
-	rm -rf greed-$(VERSION) 
+	gzip -9f greed-$(VERSION).tar
+	rm -rf greed-$(VERSION)
+
+distcheck: dist
+	gzip -cd greed-$(VERSION).tar.gz | tar xf -
+	cd greed-$(VERSION) && ./configure
+	cd greed-$(VERSION) && make
+	cd greed-$(VERSION) && make dist
 
 dvi: greed.dvi
 
@@ -75,3 +90,9 @@ install: all
 
 uninstall:
 	rm $(ELISPDIR)/greed.elc $(ELISPDIR)/greed-md5.elc $(ELISPDIR)/greed-help-macro.elc $(INFODIR)/greed.info
+
+Makefile: Makefile.in configure
+	./configure
+
+configure: configure.ac
+	autoconf

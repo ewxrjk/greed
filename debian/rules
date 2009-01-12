@@ -15,7 +15,7 @@ build:
 	$(checkdir)
 	test -x configure || autoconf
 	test -x Makefile || ./configure
-	$(MAKE) info
+	$(MAKE) info changelog
 
 clean:
 	$(checkdir)
@@ -23,7 +23,7 @@ clean:
 	-$(MAKE) -i clean
 	rm -rf *~ debian/tmp debian/*~ debian/files* debian/substvars
 
-binary-indep:	checkroot
+binary-indep:	checkroot build
 	$(checkdir)
 	rm -rf debian/tmp
 	install -d debian/tmp/DEBIAN\
@@ -41,9 +41,13 @@ binary-indep:	checkroot
 		debian/tmp/usr/share/emacs/site-lisp/$(package)/
 	install -m 644 greed.info debian/tmp/usr/share/info
 	gzip -9v debian/tmp/usr/share/info/*
+	install -m 644 README debian/tmp/usr/share/doc/$(package)/
 	install -m 644 debian/copyright debian/tmp/usr/share/doc/$(package)/
-	cat ChangeLog CHANGELOG > debian/tmp/usr/share/doc/$(package)/changelog
-	cd debian/tmp/usr/share/doc/$(package) && gzip -9v changelog
+	install -m 644 debian/changelog \
+		debian/tmp/usr/share/doc/$(package)/changelog.Debian
+	install -m 644 changelog.old debian/tmp/usr/share/doc/$(package)/
+	install -m 644 changelog debian/tmp/usr/share/doc/$(package)/
+	cd debian/tmp/usr/share/doc/$(package) && gzip -9v changelog* README
 	dpkg-gencontrol
 	chown -R root.root debian/tmp
 	chmod -R g-ws debian/tmp

@@ -8,3 +8,4 @@ configure
 *.elc
 greed.info
 install-sh
+*.tar.gz

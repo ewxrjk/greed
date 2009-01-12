@@ -1,0 +1,32 @@
+------------------------------------------------------------
+revno: 4
+committer: Richard Kettlewell <rjk@greenend.org.uk>
+branch nick: greed.dev
+timestamp: Mon 2009-01-12 21:26:09 +0000
+message:
+  Add a configure script to find an emacs to use
+  Fix some more Debiany stuff.
+------------------------------------------------------------
+revno: 3
+tags: 1.3.0a.rjk.2
+committer: Richard Kettlewell <rjk@greenend.org.uk>
+branch nick: greed-1.3.0
+timestamp: Fri 2009-01-09 22:13:02 +0000
+message:
+  Richard's 1.3.0a.rjk.2
+------------------------------------------------------------
+revno: 2
+tags: 1.3.0a.rjk.1
+committer: Richard Kettlewell <rjk@greenend.org.uk>
+branch nick: greed-1.3.0
+timestamp: Fri 2009-01-09 21:53:42 +0000
+message:
+  Richard's 1.3.0a.rjk.1
+------------------------------------------------------------
+revno: 1
+tags: 1.3.0
+committer: Richard Kettlewell <rjk@greenend.org.uk>
+branch nick: greed-1.3.0
+timestamp: Fri 2009-01-09 21:46:32 +0000
+message:
+  Owen's greed 1.3.0
