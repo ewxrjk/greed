@@ -1,4 +1,4 @@
-AC_INIT([greed], [1.3.0b], [richard+greed@sfere.greenend.org.uk])
+AC_INIT([greed], [1.4.0], [richard+greed@sfere.greenend.org.uk])
 AC_CONFIG_SRCDIR([greed.el])
 
 AC_ARG_WITH([emacs],

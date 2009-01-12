@@ -1,3 +1,15 @@
+2005-11-28  Peter Maydell  <pmaydell@chiark.greenend.org.uk>
+
+	* highlighting support reimplemented to not use font-lock mode;
+	it now copes with multiple-line Reply separators, separators
+	which don't include a day-of-the-week, and spoof Reply lines
+	inside reply bodies.
+	* network I/O is marked as iso-8859-1 -- this means that non-ASCII
+	characters are handled correctly.
+	* added support for saving startup files without quitting.
+	* added option to display sequence numbers in reply headers
+	(enabled by default).
+
 2002-11-25  Richard Kettlewell  <rjk@greenend.org.uk>
 
 	* greed.el: highlighting of index and item buffers (ages ago, but

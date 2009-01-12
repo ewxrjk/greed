@@ -601,6 +601,11 @@ file.
 Quit reading Groggs without saving any startup files.
 @cindex Quitting Greed
 
+@item S
+Save startup files. This includes all your options, your password
+if it has changed, and information about which items you have read
+or killed.
+
 @item v
 Print the current version number of Greed in the message area.
 @cindex Version number
@@ -1051,6 +1056,12 @@ it is given special treatment.
 @item greed-servers
 List of servers known to Greed.  @xref{Server list}.
 
+@item greed-show-sequence-numbers
+If non-nil, then Greed will show each reply's sequence number in its
+header, just after the date, like this: [#25e4]. This number uniquely
+identifies a reply; some people refer back to particular replies by
+sequence number.
+
 @item greed-reply-check-blank
 If non-nil, then Greed will ask if you really mean it when you attempt
 to post an entirely blank reply.  By defualt it is t.
@@ -1109,30 +1120,16 @@ Intended for use by syntax-highlighting extensions.
 @node Colours, , Hooks, Customisation
 @section Adding colours to Greed's buffers
 @cindex Colours
-@cindex Stephen Turner
 
-Stephen Turner suggested the following piece of code for adding colour
-to Greed, using the @code{hilit19} package distributed with GNU Emacs.
-Add the code to your @file{.emacs} file.
+Greed colours buffers using the following three faces:
 
-@example
-(require 'hilit19)
+ greed-unread-face
+ greed-item-header-face
+ greed-reply-separator-face
 
-(hilit-set-mode-patterns
- 'greed-item-mode
- '(("^Reply from .*$" nil msg-from)
-   ("^From .*$" nil msg-from)
-   ("^Item [A-Z][0-9]+ from .*$" nil msg-header)
-   ("^Subject: .*$" nil msg-subject)
-   ("^\\[Continued in [A-Z][0-9]+ by .*$" nil crossref)))
+FIXME document how to set these; they're all customisable.
+Look in some other info docs to see how this is explained.
 
-(hilit-set-mode-patterns
- 'greed-index-mode
- '(("^\\*.*$" nil gnus-group-full)))
-
-(add-hook 'greed-item-prepare-hook 'hilit-rehighlight-buffer)
-(add-hook 'greed-index-redraw-hook 'hilit-rehighlight-buffer)
-@end example
 @c
 @c ---------------------------------------------------------------------
 @node Concept index, Variables index, Customisation, Top

@@ -1,8 +1,11 @@
 ;;; greed.el --- RGTP-based GROGGS reader for GNU Emacs
 
 ;; Author: Gareth Rees <gdr11@cl.cam.ac.uk>
+;;         Owen Dunn <owen@greenend.org.uk>
+;;         Richard Kettlewell <rjk@greenend.org.uk>
+;;         Peter Maydell <pmaydell@chiark.greenend.org.uk>
 ;; Created: 1 Oct 1995
-;; Version: 1.3.0a
+;; Version: 1.4
 ;; Keywords: news
 
 ;; LCD Archive Entry:
@@ -12,7 +15,8 @@
 
 ;;; Copyright:
 
-;; Copyright (C) 1997 by Gareth Rees
+;; Copyright (C) 1995-1997 Gareth Rees, 2000 Owen Dunn,
+;; 2002 Richard Kettlewell, 2005-2007 Peter Maydell
 
 ;; GREED is free software; you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the
@@ -49,7 +53,7 @@
 
 ;;; Code:
 
-(defconst greed-version "1.3.0a")
+(defconst greed-version "1.4")
 
 
 ;;; Requirements: -------------------------------------------------------------
@@ -115,6 +119,9 @@ and the user is prompted before their password is saved.")
   "*Number of seconds between automatic index refreshes.")
 (defvar greed-continued-item-indent "+ "
   "*String with which to indent continued items.")
+(defvar greed-show-sequence-numbers t
+  "*If non-NIL, include the sequence number of each reply in its header
+in the item buffer.")
 
 ;; These four parameters are the components of the selected member of
 ;; the variable `greed-servers':
@@ -303,27 +310,6 @@ Will be less if the itemid is printed too.")
 (defvar greed-old-window-config nil)	; Window config before reply composed.
 (defvar greed-action-to-be nil)		; What action to take (reply/new/etc).
 
-;; Variables related to highlighting
-
-(defvar greed-index-mode-font-lock-keywords
-  '(
-    ; highlight unread items
-    ("^\\*.*" 0 greed-unread-face)
-    )
-  "Font locking for Greed index buffer")
-(defvar greed-item-mode-font-lock-keywords
-  '(
-    ; highlight item headers
-    ("^Item [A-Z][0-9]+ from \\S-+@\\S-+ at [0-9]+\\.[0-9]+ on \\([A-Z][a-z]+ \\)?[0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-item-header-face)
-    ("^Item [A-Z][0-9]+ from .* (\\S-+@\\S-+) at [0-9]+\\.[0-9]+ on \\([A-Z][a-z]+ \\)?[0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-item-header-face)
-    ; highlight reply separators
-    ("^Reply from \\S-+@\\S-+ at [0-9]+\\.[0-9]+ on [A-Z][a-z]+ [0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-reply-separator-face)
-    ("^Reply from .* (\\S-+@\\S-+) at [0-9]+\\.[0-9]+ on [A-Z][a-z]+ [0-9]+ [A-Z][a-z]+\\( [0-9]+\\)?$" 0 greed-reply-separator-face)
-    )
-  "Font locking for Greed item buffer")
-(defvar greed-syntax-table nil
-  "Syntax table for Greed index mode")
-
 
 ;;; XEmacs compatibility ------------------------------------------------------
 
@@ -421,9 +407,9 @@ Will be less if the itemid is printed too.")
 (defface greed-reply-separator-face
   '(
     (((class color) (background dark))
-     (:foreground "green"))
+     (:foreground "red"))
     (((class color) (background light))
-     (:foreground "green"))
+     (:foreground "red"))
     (t
      (:bold t))
     )
@@ -712,7 +698,9 @@ If called like `C-u C-u M-x greed', don't read startup files."
 		    "\nGREED is self-documenting: once started, type"
                     "\na capital I to read the Info documentation.\n"
 		    "\nGareth Rees\ngdr11@cl.cam.ac.uk"
-		    "\nOwen Dunn\nowend@chiark.greenend.org.uk"))
+		    "\nOwen Dunn\nowend@chiark.greenend.org.uk"
+		    "\nRichard Kettlewell\nrjk@greenend.org.uk"
+		    "\nPeter Maydell\npmaydell@chiark.greenend.org.uk"))
     (goto-char (point-min))
     (let ((fill-column (window-width)))
       (while (not (eobp))
@@ -956,6 +944,7 @@ t  toggle whether item Threads are displayed."
     (nosave  "Quit without saving" greed-index-quit-nosave)
     (quit    "Quit GREED"          greed-index-quit)
     (suspend "Suspend GREED"       greed-index-suspend)
+    (sfsave  "Save startup files"  greed-index-save)
     (sep3    "--")
     (hide    "Hide killed items"   greed-index-list-items-brief
 	     greed-index-display-killed-items)
@@ -1021,19 +1010,13 @@ t  toggle whether item Threads are displayed."
   (define-key greed-index-mode-map "Q" 'greed-index-quit-nosave)
   (define-key greed-index-mode-map "r" 'greed-index-reply)
   (define-key greed-index-mode-map "s" 'greed-index-save-item)
+  (define-key greed-index-mode-map "S" 'greed-index-save)
   (define-key greed-index-mode-map "u" 'greed-index-unkill-item)
   (define-key greed-index-mode-map "v" 'greed-index-version)
   (define-key greed-index-mode-map "z" 'greed-index-suspend)
   (define-key greed-index-mode-map [button2] 'greed-index-mouse-item)
   (define-key greed-index-mode-map [mouse-2] 'greed-index-mouse-item)
   (define-key greed-index-mode-map "?" 'describe-mode))
-
-; We have a local syntax table because otherwise we get the standard one
-; which defines " as string delimeter, which makes no sense in an index
-; buffer (and mucks up the highlighting).  Ditto the item buffer.
-(if greed-syntax-table ()
-  (setq greed-syntax-table (make-syntax-table))
-  (modify-syntax-entry ?\" "." greed-syntax-table))
 
 (defun greed-index-mode ()
   "GREED Index Mode: a major mode for reading GROGGS.
@@ -1064,6 +1047,7 @@ q       Quit reading GROGGS.
 Q       Quit reading GROGGS without saving the startup files.
 r       Reply to the current item.
 s       Save the current item to a file.
+S       Save startup files but don't quit reading GROGGS.
 u       Un-kill this item.
 v       Show the version number of GREED.
 z       Suspend GREED (without quitting)
@@ -1130,11 +1114,6 @@ further details\):
   (greed-set-modified "--- ")
   (greed-install-menus greed-index-actions-menu greed-index-options-menu
 		       greed-index-edit-menu)
-  (set (make-local-variable 'font-lock-defaults)
-       '(greed-index-mode-font-lock-keywords nil nil nil nil))
-  (if (or greed-xemacs-p window-system)
-      (font-lock-mode))
-  (set-syntax-table greed-syntax-table)
   (run-hooks 'greed-index-mode-hook))
 
 ;; Select item N in the index buffer, where N starts at 1.
@@ -1208,7 +1187,8 @@ further details\):
 	 (read-to (aref item greed-data-read-to))
 	 (last-seq (aref item greed-data-last-seq))
 	 (continued (aref item greed-data-contin))
-	 (unread (or (null read-to) (greed-seq< read-to last-seq))))
+	 (unread (or (null read-to) (greed-seq< read-to last-seq)))
+         (linestart (point)))
     (insert
      (if unread "*" " ")
      (if greed-index-display-killed-items
@@ -1221,7 +1201,9 @@ further details\):
      (if (and greed-index-show-threads continued)
 	 greed-continued-item-indent
        "")
-     subject "\n")))
+     subject)
+    (if unread (put-text-property linestart (point) 'face greed-unread-face))
+    (insert "\n")))
 
 
 ;;; Options -------------------------------------------------------------------
@@ -1481,6 +1463,12 @@ Returns T if GREED quit, NIL otherwise."
   (if (or (not greed-novice-user)
 	  (y-or-n-p "Really quit GREED without saving options? "))
       (greed-quit t)))
+
+(defun greed-index-save ()
+  "Save startup files, including which items have been read and killed."
+  (interactive)
+  (with-temp-message "Saving GREED startup files..."
+    (greed-save-startup-files)))
 
 (defun greed-index-list-items-brief ()
   "List only non-killed items."
@@ -2030,11 +2018,6 @@ Various hooks for customisation:
 		      (greed-item-identification greed-item-data))))
     (greed-set-buffer-identification (format "GREED: %s" id))
     (setq mode-name mn))
-  (set (make-local-variable 'font-lock-defaults)
-       '(greed-item-mode-font-lock-keywords nil nil nil nil))
-  (if (or greed-xemacs-p window-system)
-      (font-lock-mode))
-  (set-syntax-table greed-syntax-table)
   (use-local-map greed-item-mode-map)
   (buffer-disable-undo (current-buffer))
   (run-hooks 'greed-item-mode-hook))
@@ -2139,7 +2122,8 @@ Various hooks for customisation:
 ;; reply.
 (defun greed-item-prepare ()
   (let ((buffer-read-only nil)
-	(mark-next nil))
+	(mark-next nil)
+        (is-first t))
     (goto-char (point-min))
     (while (re-search-forward "^\\^\\([0-9A-Fa-f]+\\) \\([0-9A-Fa-f]+\\).*$" nil t)
       (let ((cookie-start (match-beginning 0))
@@ -2159,9 +2143,15 @@ Various hooks for customisation:
 	      (end-of-line)
 	      (insert (format " %4d" (nth 5 time)))
 	      (beginning-of-line)))
+        (if greed-show-sequence-numbers
+            (progn
+              (end-of-line)
+              (insert " [#" (substring seq (string-match "[^0]" seq)) "]")
+              (beginning-of-line)))
 	(if (re-search-forward "^$" nil t)
 	    (put-text-property header-start (match-beginning 0)
-			       'face 'bold))
+			       'face (if is-first greed-item-header-face greed-reply-separator-face)))
+        (setq is-first nil)
 	(delete-region cookie-start header-start)
 	(if mark-next
 	    (setq mark-next nil
@@ -2889,9 +2879,9 @@ If called with prefix argument, index diffs will be fetched."
 
       ;; We must specify that the CRLF termination of protocol lines is not
       ;; converted to LF by emacs20...
-
+      ;; (was 'no-conversion 'no-conversion
       (if (fboundp 'set-process-coding-system)
-	  (set-process-coding-system greed-server-process 'no-conversion 'no-conversion))
+	  (set-process-coding-system greed-server-process 'iso-8859-1-unix 'iso-8859-1-unix))
 	
 
       ;; Wait for banner response; either "230 you must log in" or "231
