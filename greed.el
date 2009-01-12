@@ -586,16 +586,16 @@ Will be less if the itemid is printed too.")
 (eval-when-compile
   (if greed-xemacs-p
       (defmacro greed-make-help-screen (fname help-line help-text helped-map)
-	(` (make-help-screen (, fname) (, help-line) (, help-text) 
-			     (, helped-map))))
+	` (make-help-screen , fname , help-line , help-text 
+			     , helped-map))
     (defmacro greed-make-help-screen (fname help-line help-text helped-map)
       (let ((real-fn (intern (concat (symbol-name fname) "-real"))))
-	(` (progn (defun (, fname) ()
+	` (progn (defun , fname ()
 		    (interactive)
-		    (let ((three-step-help t)) ((, real-fn))))
+		    (let ((three-step-help t)) (, real-fn)))
 		  (make-help-screen
-		   (, real-fn) (, help-line) (, help-text) 
-		   (, helped-map))))))))
+		   , real-fn , help-line , help-text 
+		   , helped-map))))))
 
 
 ;;; Date functions ------------------------------------------------------------
