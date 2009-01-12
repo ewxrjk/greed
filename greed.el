@@ -2875,6 +2875,11 @@ If called with prefix argument, index diffs will be fetched."
     (if (null greed-server-process)
 	(progn (greed-close-server)
 	       nil)
+      ; Emacs 22 would like:
+      ; (set-process-query-on-exit-flag greed-server-process nil)
+      ; and issues a warning for process-kill-without-query.  However
+      ; Emacs21 does not know set-process-query-on-exit-flag, so we persist
+      ; with the old function for now.
       (process-kill-without-query greed-server-process)
 
       ;; We must specify that the CRLF termination of protocol lines is not
