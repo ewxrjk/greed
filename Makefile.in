@@ -50,8 +50,7 @@ maintainer-clean: distclean
 	rm -f configure
 
 changelog:
-	if bzr log > changelog.new; then mv changelog.new changelog;\
-	else rm -f changelog.new; fi
+	if test -x .bzr; then bzr log > changelog; fi
 
 dist: changelog
 	rm -rf greed-$(VERSION)
@@ -97,3 +96,5 @@ Makefile: Makefile.in configure
 
 configure: configure.ac
 	autoconf
+
+.PHONY: changelog
