@@ -21,5 +21,23 @@ fi
 AC_MSG_RESULT([$EMACS])
 AC_SUBST([EMACS])
 
+AC_MSG_CHECKING([where to put lisp files])
+AC_ARG_WITH([lispdir],
+            [AS_HELP_STRING([--with-lispdir=LISP-DIRECTORY],
+                            [where to install lisp files])],
+            [lispdir="$withval"],
+            [lispdir=${lispdir:-/usr/local/share/$EMACS/site-lisp}])
+AC_MSG_RESULT([$lispdir])
+AC_SUBST([lispdir])
+
+AC_MSG_CHECKING([where to put info files])
+AC_ARG_WITH([infodir],
+            [AS_HELP_STRING([--with-infodir=INFO-DIRECTORY],
+                            [where to install info files])],
+            [infodir="$withval"],
+            [infodir=/usr/local/share/info])
+AC_MSG_RESULT([$infodir])
+AC_SUBST([infodir])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

@@ -10,8 +10,8 @@
 #   `Info-default-directory-list' appropriately.
 # EMACS_PROGRAM is the Emacs program
 
-ELISPDIR = $(HOME)/elisp/
-INFODIR = $(HOME)/info/
+lispdir = @lispdir@
+infodir = @infodir@
 DOT_EMACS = $(HOME)/.emacs
 UPDATE_DOT_EMACS = false
 EMACS = @EMACS@
@@ -77,19 +77,21 @@ dvi: greed.dvi
 
 info: greed.info
 
-install: all
-	if test ! -d $(ELISPDIR); then mkdir $(ELISPDIR); fi
-	if test ! -d $(INFODIR); then mkdir $(INFODIR); fi
-	cp greed.elc greed-md5.elc greed-help-macro.elc $(ELISPDIR)
-	cp greed.info $(INFODIR)
+installdirs:
+	mkdir -p $(lispdir)
+	mkdir -p $(infodir)
+
+install: all installdirs
+	cp greed.elc greed-md5.elc greed-help-macro.elc $(lispdir)
+	cp greed.info $(infodir)
 	if test "$(UPDATE_DOT_EMACS)" = "true"; then \
 	  echo "(autoload 'greed \"greed\" \"Read Groggs\" t)" >> $(DOT_EMACS); \
-	  echo "(setq load-path (cons \"$(ELISPDIR)\" load-path))" >> $(DOT_EMACS); \
-	  echo "(setq Info-default-directory-list (cons \"$(INFODIR)\" Info-default-directory-list))" >> $(DOT_EMACS); \
+	  echo "(setq load-path (cons \"$(lispdir)\" load-path))" >> $(DOT_EMACS); \
+	  echo "(setq Info-default-directory-list (cons \"$(infodir)\" Info-default-directory-list))" >> $(DOT_EMACS); \
 	fi
 
 uninstall:
-	rm $(ELISPDIR)/greed.elc $(ELISPDIR)/greed-md5.elc $(ELISPDIR)/greed-help-macro.elc $(INFODIR)/greed.info
+	rm $(lispdir)/greed.elc $(lispdir)/greed-md5.elc $(lispdir)/greed-help-macro.elc $(infodir)/greed.info
 
 Makefile: Makefile.in configure
 	./configure
