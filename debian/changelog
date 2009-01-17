@@ -1,3 +1,10 @@
+groggs-greed (1.4.2) unstable; urgency=low
+
+  * New variable greed-quit-without-prompting.
+  * Fix various complaints from Lintian.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Sat, 17 Jan 2009 17:28:38 +0000
+
 groggs-greed (1.4.1) unstable; urgency=low
 
   * Resolve some compilation warnings.
