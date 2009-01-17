@@ -8,193 +8,91 @@ Installation
 
 There are three ways you can install Greed.
 
-.deb Installation
------------------
+  .deb Installation
+  -----------------
 
-Use this method if you are using a Debian, Ubuntu or similar system
-and are the system administrator:
+  Use this method if you are using a Debian, Ubuntu or similar system
+  and are the system administrator:
 
-To build:
-  debian/rules build
-  fakeroot debian/rules install
-  sudo dpkg -i ../groggs-greed-*.deb
+  To build:
+    debian/rules build
+    fakeroot debian/rules install
+    sudo dpkg -i ../groggs-greed-*.deb
 
-Greed should then be available to all users, perhaps after they have
-restarted their Emacs.
+  Greed should then be available to all users, perhaps after they have
+  restarted their Emacs.
 
-System-wide Installation
-------------------------
+  System-wide Installation
+  ------------------------
 
-Use this method if you are the system administrator of a
-non-.deb-based system:
+  Use this method if you are the system administrator of a
+  non-.deb-based system:
 
-To install manually:
-   ./configure
-or if that does not correctly guess where to put files on your installation:
-   ./configure --with-emacs=EMACS-PROGRAM \
-               --with-lispdir=/path/to/site-lisp \
-               --with-infodir=/path/to/info
-and then:
-  make
-  sudo make install
+  To install manually:
+     ./configure
+  or if that does not correctly guess where to put files on your
+  installation:
 
-Each user that wants to use Greed should then add the following line
-to their ~/.emacs file:
+     ./configure --with-emacs=EMACS-PROGRAM \
+		 --with-lispdir=/path/to/site-lisp \
+		 --with-infodir=/path/to/info
+  and then:
+    make
+    sudo make install
 
-  (autoload 'greed "greed" "Read Groggs" t)
+  Each user that wants to use Greed should then add the following line
+  to their ~/.emacs file:
 
-Personal Installation
----------------------
+    (autoload 'greed "greed" "Read Groggs" t)
 
-Use this method if you are no the system administrator of the system
-you want to read GROGGS from.
+  Personal Installation
+  ---------------------
 
-  ./configure --prefix=$HOME --with-dot-emacs
-  make
-  make install
+  Use this method if you are no the system administrator of the system
+  you want to read GROGGS from.
 
-The 'make install' phase will update your ~/.emacs file.  Omit the
---with-dot-emacs option if you don't want it to do this.
+    ./configure --prefix=$HOME --with-dot-emacs
+    make
+    make install
+
+  The 'make install' phase will update your ~/.emacs file.  Omit the
+  --with-dot-emacs option if you don't want it to do this.
+
+
+Using Greed
+-----------
+
+  Greed needs to know your e-mail address, which should be stored in the
+  variable `user-mail-address'.  If this is incorrect (type `C-h v
+  user-mail-address RET' to see the value of the variable) you'll need
+  to change it, for instance by typing:
+
+    M-x customize-variable RET user-mail-address RET
+
+  and following the instructions in the customization buffer.
 
 
 Feedback
 --------
 
-This branch of Greed includes work by a number of hands, and is
-(lightly!) maintained by:
-  Richard Kettlewell <rjk@greenend.org.uk>
-Feedback is welcome.
+  This branch of Greed includes work by a number of hands, and is
+  (lightly!) maintained by:
+    Richard Kettlewell <rjk@greenend.org.uk>
+  Feedback is welcome.
 
 
 Copyright
 ---------
 
-Copyright (C) 1995-1997 Gareth Rees, 2000 Owen Dunn,
-2002, 2009 Richard Kettlewell, 2005-2007 Peter Maydell
+  Copyright (C) 1995-1997 Gareth Rees, 2000 Owen Dunn,
+  2002, 2009 Richard Kettlewell, 2005-2007 Peter Maydell
 
-GREED is free software; you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the
-Free Software Foundation; either version 2, or (at your option) any
-later version.
+  GREED is free software; you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation; either version 2, or (at your option) any
+  later version.
 
-GREED is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-for more details.
-
---- original README contents ---------------------------------------------------
-
-Installing Greed
-****************
-
-In order to run Greed, you will a copy of GNU Emacs or XEmacs (version
-19.20 or later) with network and process support.
-
-
-Your e-mail address
-===================
-
-Greed needs to know your e-mail address, which should be stored in the
-variable `user-mail-address'.  If this is incorrect (type `C-h v
-user-mail-address RET' to see the value of the variable) you'll need to
-add a line to your `.emacs' file to change it.  For example:
-
-     (setq user-mail-address "me@my.host.name")
-
-
-Using an existing Greed installation
-====================================
-
-You need to know the location of the three files `greed.elc',
-`greed-md5.elc' and `greed.info', and make sure that the first two
-files are in a directory listed in the variable `load-path' and the
-third is in a directory listen in variable
-`Info-default-directory-list'.
-
-For example, if the directories are `/usr/gnu/emacs/site-lisp/' and
-`/usr/info/' respectively, then you would put the following in your
-`.emacs' file:
-
-     (setq load-path (cons "/usr/gnu/emacs/site-lisp/" load-path))
-     (setq Info-default-directory-list
-           (cons "/usr/info/" Info-default-directory-list))
-
-You also need to add the following line to your `.emacs' file:
-
-     (autoload 'greed "greed" "Read Groggs" t)
-
-To run Greed, start Emacs and type `M-x greed RET'.
-
-
-Files in the Greed distribution
-===============================
-
-If Greed is not installed, you need to fetch the Greed distribution,
-which should come with the following files:
-
-`greed.el'
-     The Greed program in Emacs LISP
-`greed-md5.el'
-     The MD5 Message Digest program in Emacs LISP
-`greed-help-macro.el'
-     A port of help-macro.el to XEmacs.
-`README'
-     Installation manual
-`greed.texi'
-     Texinfo source for the Greed manual
-`Makefile'
-     Makefile for compiling and testing
-
-
-Quick installation
-==================
-
-Unpack the greed distribution, and type `make install' at the shell
-prompt.  The Emacs LISP files will be put in the directory `~/elisp/',
-the Info manual in the directory `~/info/' and your `.emacs' file will
-be updated.  To run Greed, start Emacs and type `M-x greed RET'.
-
-
-Advanced installation.
-======================
-
-  1. If necessary, edit the file `greed.el' and change the declaration
-     of the `greed-servers' variable to the appropriate value(s) for
-     your system.  *Note Server list::, for a description of the
-     contents of this variable.  The default value of this variable
-     should be fine if you intend to connect only to the Cambridge
-     Groggs server.
-
-  2. Edit the definition of `UPDATE_DOT_EMACS' in the file `Makefile'.
-     Set it to `true' if you want your `.emacs' file to be automatically
-     updated (and if so, omit steps 3 and 5), or anything else if you
-     don't.
-
-  3. Edit the definitions of `ELISPDIR' and `INFODIR' in the file
-     `Makefile'.  `ELISPDIR' is the directory in which you keep Emacs
-     LISP programs: it must be on the Emacs variable `load-path'; if
-     necessary add a new directory to `load-path' by putting
-
-          (setq load-path (cons "~/elisp/" load-path))
-
-     or something similar in your `.emacs' file.  `INFODIR' is the
-     directory in which you keep Info documentation: it must be on the
-     Emacs variable `Info-default-directory-list'; if necessary add a
-     new directory to `Info-default-directory-list' by putting
-
-          (setq Info-default-directory-list 
-                (cons "~/info/" Info-default-directory-list))
-
-     or something similar in your `.emacs' file.
-
-  4. Run `make install'.
-
-  5. Put the following in your `.emacs' file:
-
-          (autoload 'greed "greed" "Read Groggs" t)
-
-The Info documentation describes the installation and use of Greed.
-Once you have compiled and installed the Info documentation, type `C-h i
-g (greed) RET' in Emacs to read it.
-
-Gareth Rees, March 1996.
+  GREED is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  for more details.
