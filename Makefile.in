@@ -10,6 +10,9 @@
 #   `Info-default-directory-list' appropriately.
 # EMACS_PROGRAM is the Emacs program
 
+prefix = @prefix@
+datarootdir = @datarootdir@
+datadir = @datadir@
 lispdir = @lispdir@
 infodir = @infodir@
 DOT_EMACS = $(HOME)/.emacs
