@@ -104,5 +104,12 @@ AC_ARG_WITH([infodir],
 AC_MSG_RESULT([$infodir])
 AC_SUBST([infodir])
 
+AC_ARG_WITH([dot-emacs],
+            [AS_HELP_STRING([--with-dot-emacs],
+                            [Attempt to update your ~/.emacs on install])],
+            [UPDATE_DOT_EMACS=true],
+            [UPDATE_DOT_EMACS=false])
+AC_SUBST([UPDATE_DOT_EMACS])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

@@ -1,0 +1,10 @@
+#! /bin/sh
+set -e
+if grep 'autoload.*greed' $DOT_EMACS >/dev/null; then
+  echo "$DOT_EMACS already autoloads greed - no change made" >&2
+else
+  exec >> $DOT_EMACS
+  echo "(autoload 'greed \"greed\" \"Read Groggs\" t)"
+  echo "(setq load-path (cons \"$lispdir\" load-path))"
+  echo "(setq Info-default-directory-list (cons \"$infodir\" Info-default-directory-list))"
+fi

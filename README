@@ -6,8 +6,27 @@ This is Greed, a GROGGS reader for Emacs.
 Installation
 ------------
 
-If you have a .deb-based system (Debian, Ubuntu or similar) then you
-should install from a .deb file rather than from source.
+There are three ways you can install Greed.
+
+.deb Installation
+-----------------
+
+Use this method if you are using a Debian, Ubuntu or similar system
+and are the system administrator:
+
+To build:
+  debian/rules build
+  fakeroot debian/rules install
+  sudo dpkg -i ../groggs-greed-*.deb
+
+Greed should then be available to all users, perhaps after they have
+restarted their Emacs.
+
+System-wide Installation
+------------------------
+
+Use this method if you are the system administrator of a
+non-.deb-based system:
 
 To install manually:
    ./configure
@@ -24,6 +43,19 @@ to their ~/.emacs file:
 
   (autoload 'greed "greed" "Read Groggs" t)
 
+Personal Installation
+---------------------
+
+Use this method if you are no the system administrator of the system
+you want to read GROGGS from.
+
+  ./configure --prefix=$HOME --with-dot-emacs
+  make
+  make install
+
+The 'make install' phase will update your ~/.emacs file.  Omit the
+--with-dot-emacs option if you don't want it to do this.
+
 
 Feedback
 --------
@@ -38,7 +70,7 @@ Copyright
 ---------
 
 Copyright (C) 1995-1997 Gareth Rees, 2000 Owen Dunn,
-2002 Richard Kettlewell, 2005-2007 Peter Maydell
+2002, 2009 Richard Kettlewell, 2005-2007 Peter Maydell
 
 GREED is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
