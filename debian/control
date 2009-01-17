@@ -6,7 +6,7 @@ Standards-Version: 3.0.1
 
 Package: groggs-greed
 Architecture: all
-Depends: emacsen|xemacs19|xemacs20|xemacs21
+Depends: emacs|emacsen|xemacs19|xemacs20|xemacs21
 Description: RGTP-based GROGGS reader for GNU Emacs and XEmacs
  GREED stands for "Groggs Reader/Editor with Emacs Display"
  and is a client that runs under GNU Emacs and XEmacs and can be used
