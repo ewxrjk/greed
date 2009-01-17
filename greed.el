@@ -158,6 +158,8 @@ a random grogname from `greed-grogname-list' for each posting.")
   "*If non-NIL, show continuation threads in index.")
 (defvar greed-novice-user t
   "*If non-NIL, more help and extra confirmation prompts will be given.")
+(defvar greed-quit-without-prompting nil
+  "*If non-NIL, quit without prompting even if greed-novice-user is t.")
 (defvar greed-save-directory nil
   "*Directory in which to save items.")
 (defvar greed-grogname ""
@@ -221,7 +223,7 @@ Typically a random number represented as a string of hex digits.")
 	'greed-ask-for-grogname 'greed-choose-random-grogname
 	'greed-index-height 'greed-index-show-itemids
 	'greed-index-show-first 'greed-index-show-threads
-	'greed-novice-user
+	'greed-novice-user 'greed-quit-without-prompting
 	'greed-save-directory 'greed-grogname 'greed-timer-p
 	'greed-userid)
   "GREED variable names which should be saved to the startup file.
@@ -1452,6 +1454,7 @@ Returns T if successful, NIL otherwise."
 Returns T if GREED quit, NIL otherwise."
   (interactive)
   (if (or (not greed-novice-user)
+	  greed-quit-without-prompting
 	  (y-or-n-p "Do you really want to quit GREED? "))
       (progn
 	(greed-quit)
