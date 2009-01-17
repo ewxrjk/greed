@@ -93,8 +93,11 @@ install: all installdirs
 uninstall:
 	rm $(lispdir)/greed.elc $(lispdir)/greed-md5.elc $(lispdir)/greed-help-macro.elc $(infodir)/greed.info
 
-Makefile: Makefile.in configure
-	./configure
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
 
 configure: configure.ac
 	autoconf
