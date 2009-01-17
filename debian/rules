@@ -20,7 +20,7 @@ build:
 clean:
 	$(checkdir)
 	rm -f build
-	-$(MAKE) -i clean
+	test -f Makefile && $(MAKE) clean
 	rm -rf *~ debian/tmp debian/*~ debian/files* debian/substvars
 
 binary-indep:	checkroot build
@@ -70,5 +70,15 @@ binary:		binary-indep binary-arch
 checkroot:
 	$(checkdir)
 	test root = "`whoami`"
+
+VERSION=$(shell $(MAKE) echo-version)
+
+source:
+	$(MAKE) dist
+	rm -rf greed-$(VERSION)
+	tar xfz greed-$(VERSION).tar.gz
+	mv greed-$(VERSION) groggs-greed-$(VERSION)
+	dpkg-source -b groggs-greed-$(VERSION)
+	rm -rf groggs-greed-$(VERSION) greed-$(VERSION).tar.gz
 
 .PHONY: binary binary-arch binary-indep clean checkroot

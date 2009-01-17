@@ -10,3 +10,4 @@ greed.info
 install-sh
 *.tar.gz
 ./changelog
+*.dsc

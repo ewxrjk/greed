@@ -99,4 +99,7 @@ Makefile: Makefile.in configure
 configure: configure.ac
 	autoconf
 
+echo-version:
+	@echo $(VERSION)
+
 .PHONY: changelog
