@@ -1,3 +1,9 @@
+groggs-greed (1.4.3) unstable; urgency=low
+
+  * Greed 1.4.3.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Sun, 18 Jan 2009 14:09:23 +0000
+
 groggs-greed (1.4.2) unstable; urgency=low
 
   * New variable greed-quit-without-prompting.
