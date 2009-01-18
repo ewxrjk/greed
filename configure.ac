@@ -37,7 +37,7 @@ esac
 
 # Figure out Emacs root directory
 AC_CACHE_CHECK([inferred Emacs install root],[greed_cv_emacsroot],[
-  greed_cv_emacsroot=`echo $EMACS | sed 's/\/bin\/.*//g'`
+  greed_cv_emacsroot=`echo "$EMACS" | sed 's/\/bin\/.*//g'`
   case $greed_cv_emacsroot in
   *bin* )
     greed_cv_emacsroot=unknown
@@ -47,7 +47,7 @@ AC_CACHE_CHECK([inferred Emacs install root],[greed_cv_emacsroot],[
 
 # /usr is not suitable for installing extension packages!
 case $greed_cv_emacsroot in
-/usr | unknown )
+/usr | /sw | unknown )
   root_suitable=false
   ;;
 * )
@@ -61,18 +61,18 @@ AC_ARG_WITH([lispdir],
                             [where to install lisp files])],
             [lispdir="$withval"],[
   if $root_suitable \
-     && test -d $greed_cv_emacsroot/share/$emacstype/site-lisp; then
+     && test -d "$greed_cv_emacsroot/share/$emacstype/site-lisp"; then
     # Should work in upstream GNU Emacs
-    lispdir=$greed_cv_emacsroot/share/$emacstype/site-lisp
+    lispdir="$greed_cv_emacsroot/share/$emacstype/site-lisp"
   elif $root_suitable \
-     && test -d $greed_cv_emacsroot/lib/$emacstype/site-lisp; then
-    lispdir=$greed_cv_emacsroot/lib/$emacstype/site-lisp
+     && test -d "$greed_cv_emacsroot/lib/$emacstype/site-lisp"; then
+    lispdir="$greed_cv_emacsroot/lib/$emacstype/site-lisp"
   elif $root_suitable \
-     && test -d $greed_cv_emacsroot/share/emacs/site-lisp; then
-    lispdir=$greed_cv_emacsroot/share/emacs/site-lisp
+     && test -d "$greed_cv_emacsroot/share/emacs/site-lisp"; then
+    lispdir="$greed_cv_emacsroot/share/emacs/site-lisp"
   elif $root_suitable  \
-     && test -d $greed_cv_emacsroot/lib/emacs/site-lisp; then
-    lispdir=$greed_cv_emacsroot/lib/emacs/site-lisp
+     && test -d "$greed_cv_emacsroot/lib/emacs/site-lisp"; then
+    lispdir="$greed_cv_emacsroot/lib/emacs/site-lisp"
   elif test -d "`eval echo "$datarootdir"`/$emacstype/site-lisp"; then
     lispdir="\${datarootdir}/$emacstype/site-lisp"
   else
@@ -89,13 +89,13 @@ AC_ARG_WITH([infodir],
                             [where to install info files])],
             [infodir="$withval"], [
   if $root_suitable \
-     && test -d $greed_cv_emacsroot/share/info; then
+     && test -d "$greed_cv_emacsroot/share/info"; then
     # Should work in upstream GNU Emacs
-    infodir=$greed_cv_emacsroot/share/info
+    infodir="$greed_cv_emacsroot/share/info"
   elif $root_suitable \
-     && test -d $greed_cv_emacsroot/info; then
+     && test -d "$greed_cv_emacsroot/info"; then
     # ...in case there's any /usr/share-is-evil holdouts
-    infodir=$greed_cv_emacsroot/info
+    infodir="$greed_cv_emacsroot/info"
   else
     # Should work in Debian's GNU Emacs and XEmacs
     infodir="\${datarootdir}/info"
