@@ -47,14 +47,25 @@ if test $greed_cv_emacs_mule != yes; then
 fi
 
 # Figure out Emacs type
-case "$EMACS" in
-*xemacs* )
+AC_CACHE_CHECK([what kind of Emacs is $EMACS],
+               [greed_cv_emacstype],[
+  case "$EMACS" in
+  *xemacs* )
+    greed_cv_emacstype="XEmacs"
+    ;;
+  */emacs* )
+    greed_cv_emacstype="GNU emacs"
+    ;;
+  * )
+    greed_cv_emacstype="unknown"
+    ;;
+  esac
+])
+if test "$greed_cv_emacstype" = XEmacs; then
   emacstype=xemacs
-  ;;
-* )
+else
   emacstype=emacs
-  ;;
-esac
+fi
 
 # Figure out Emacs root directory
 AC_CACHE_CHECK([inferred Emacs install root],[greed_cv_emacsroot],[
