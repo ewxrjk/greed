@@ -94,7 +94,7 @@ installdirs:
 install: installdirs
 	cp greed.elc greed-md5.elc greed-help-macro.elc $(lispdir)
 	cp greed.info $(infodir)
-	$(UPDATE_DOT_EMACS) && ./update-dot-emacs
+	if $(UPDATE_DOT_EMACS); then ./update-dot-emacs; fi
 
 uninstall:
 	rm -f $(lispdir)/greed.elc
