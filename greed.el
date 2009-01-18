@@ -5,7 +5,7 @@
 ;;         Richard Kettlewell <rjk@greenend.org.uk>
 ;;         Peter Maydell <pmaydell@chiark.greenend.org.uk>
 ;; Created: 1 Oct 1995
-;; Version: 1.4.2
+;; Version: 1.4.DEV
 ;; Keywords: news
 
 ;; LCD Archive Entry:
@@ -53,7 +53,7 @@
 
 ;;; Code:
 
-(defconst greed-version "1.4.2")
+(defconst greed-version "1.4.DEV")
 
 
 ;;; Requirements: -------------------------------------------------------------

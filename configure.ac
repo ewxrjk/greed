@@ -1,4 +1,4 @@
-AC_INIT([greed], [1.4.2], [richard+greed@sfere.greenend.org.uk])
+AC_INIT([greed], [1.4.DEV], [richard+greed@sfere.greenend.org.uk])
 AC_CONFIG_SRCDIR([greed.el])
 
 # Let the user choose their preferred version of Emacs via a command-line
