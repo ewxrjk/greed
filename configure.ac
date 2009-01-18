@@ -23,7 +23,28 @@ case "$EMACS" in
   AC_PATH_PROG([EMACS],[$EMACS])
   ;;
 esac
+
+if test "x$EMACS" = x; then
+  AC_MSG_ERROR([no Emacs found])
+fi
+
 AC_SUBST([EMACS])
+
+AC_CACHE_CHECK([whether $EMACS has multilingual support],
+               [greed_cv_emacs_mule],[
+  # XEmacs fails an assert if this test fails and the shell blurts
+  # an abort message all over the configure output.  If this bothers
+  # you, get Emacs fixed.
+  if "$EMACS" --batch -f list-coding-systems </dev/null >/dev/null 2>&1; then
+    greed_cv_emacs_mule=yes
+  else
+    greed_cv_emacs_mule=no
+  fi
+])
+
+if test $greed_cv_emacs_mule != yes; then
+  AC_MSG_ERROR([Greed requires multilingual support])
+fi
 
 # Figure out Emacs type
 case "$EMACS" in
