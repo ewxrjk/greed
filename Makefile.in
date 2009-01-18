@@ -31,16 +31,16 @@ export lispdir
 all: greed.info greed-md5.elc greed.elc greed-help-macro.elc
 
 greed.elc: greed.el
-	$(EMACS) -batch -l greed-make.el -f batch-byte-compile greed.el
+	"$(EMACS)" -batch -l greed-make.el -f batch-byte-compile greed.el
 
 greed-md5.elc: greed-md5.el
-	$(EMACS) -batch -l greed-make.el -f batch-byte-compile greed-md5.el
+	"$(EMACS)" -batch -l greed-make.el -f batch-byte-compile greed-md5.el
 
 greed-help-macro.elc: greed-help-macro.el
-	$(EMACS) -batch -l greed-make.el -f batch-byte-compile greed-help-macro.el
+	"$(EMACS)" -batch -l greed-make.el -f batch-byte-compile greed-help-macro.el
 
 greed.info: greed.texi
-	$(EMACS) -batch -l texinfmt -f batch-texinfo-format greed.texi
+	"$(EMACS)" -batch -l texinfmt -f batch-texinfo-format greed.texi
 
 greed.dvi: greed.texi
 	texi2dvi greed.texi
@@ -94,7 +94,7 @@ installdirs:
 install: installdirs
 	cp greed.elc greed-md5.elc greed-help-macro.elc $(lispdir)
 	cp greed.info $(infodir)
-	$(UPDATE_DOT_EMACS) && ./update-dot-emacs
+	if $(UPDATE_DOT_EMACS); then ./update-dot-emacs; fi
 
 uninstall:
 	rm -f $(lispdir)/greed.elc
