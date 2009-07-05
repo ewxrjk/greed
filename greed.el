@@ -305,12 +305,20 @@ Will be less if the itemid is printed too.")
 (defvar greed-item-data nil)		; Vector of item information.
 (defvar greed-first-unread nil)		; First unread reply in item.
 
+(make-variable-buffer-local 'greed-item-data)
+(make-variable-buffer-local 'greed-first-unread)
+
 ;; These variables are buffer-local in reply buffers.
 
 (defvar greed-reply-to-item nil)	; Which item this is a reply to.
 (defvar greed-reply-sent nil)		; Whether reply has been sent.
 (defvar greed-old-window-config nil)	; Window config before reply composed.
 (defvar greed-action-to-be nil)		; What action to take (reply/new/etc).
+
+(make-variable-buffer-local 'greed-reply-to-item)
+(make-variable-buffer-local 'greed-reply-sent)
+(make-variable-buffer-local 'greed-old-window-config)
+(make-variable-buffer-local 'greed-action-to-be)
 
 
 ;;; XEmacs compatibility ------------------------------------------------------
@@ -2005,8 +2013,6 @@ Various hooks for customisation:
     Called with no arguments after an item is prepared for reading,
     if that value is non-nil."
   (kill-all-local-variables)
-  (make-variable-buffer-local 'greed-item-data)
-  (make-variable-buffer-local 'greed-first-unread)
   (greed-set-modified "--- ")
   (greed-set-process nil)
   (setq greed-item-data nil
@@ -2200,10 +2206,6 @@ Various hooks for customisation:
 	(reply-buf (get-buffer-create greed-reply-buffer))
 	(win-config (current-window-configuration)))
     (set-buffer reply-buf)
-    (make-variable-buffer-local 'greed-reply-to-item)
-    (make-variable-buffer-local 'greed-reply-sent)
-    (make-variable-buffer-local 'greed-old-window-config)
-    (make-variable-buffer-local 'greed-action-to-be)
     (if (and (memq action '(reply newitem edit edix mots))
 	     (or (not exists-reply-buf)
 		 greed-reply-sent
