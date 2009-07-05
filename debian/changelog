@@ -1,3 +1,11 @@
+groggs-greed (1.4.4) unstable; urgency=low
+
+  * Add a category header to the documentation.
+  * Move local variable declarations to the right place.
+  * Add an md5sums file.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Sun, 05 Jul 2009 12:17:32 +0100
+
 groggs-greed (1.4.3) unstable; urgency=low
 
   * Greed 1.4.3.

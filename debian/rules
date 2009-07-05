@@ -48,6 +48,10 @@ binary-indep:	checkroot build
 	install -m 644 changelog.old debian/tmp/usr/share/doc/$(package)/
 	install -m 644 changelog debian/tmp/usr/share/doc/$(package)/
 	cd debian/tmp/usr/share/doc/$(package) && gzip -9v changelog* README
+	cd debian/tmp && \
+		find -name DEBIAN -prune -o -type f -print \
+			| sed 's/^\.\///' \
+			| xargs md5sum > DEBIAN/md5sums
 	dpkg-gencontrol
 	chown -R root.root debian/tmp
 	chmod -R g-ws debian/tmp

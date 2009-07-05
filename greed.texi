@@ -2,6 +2,11 @@
 @comment %**start of header (This is for running Texinfo on a region.)
 @setfilename greed.info
 @settitle Greed
+@dircategory Emacs
+@direntry
+* Greed: (greed).  A Groggs Reader/Editor for GNU Emacs and XEmacs.
+@end direntry
+
 @comment %**end of header (This is for running Texinfo on a region.)
 @ifinfo
 This file documents Greed, a Groggs Reader/Editor for GNU Emacs and XEmacs
