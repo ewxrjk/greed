@@ -1,3 +1,10 @@
+groggs-greed (1.4.DEV) unstable; urgency=low
+
+  * This is the development version of Greed.  If you want something
+    stable you should be using the greed.rel branch instead.
+
+ -- Richard Kettlewell <rjk@greenend.org.uk>  Sun, 05 Jul 2009 12:14:03 +0100
+
 groggs-greed (1.4.2) unstable; urgency=low
 
   * New variable greed-quit-without-prompting.
